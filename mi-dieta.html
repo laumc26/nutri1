@@ -81,7 +81,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .db-del-btn:hover{background:rgba(200,0,0,.35)}
 
 /* ── DAILY TOTALS ── */
-.daily-totals{background:white;border-radius:14px;padding:13px 16px;box-shadow:var(--shadow);margin:0 16px 14px}
+.daily-totals{background:white;border-radius:14px;padding:13px 16px;box-shadow:var(--shadow);margin:20px 16px 14px}
 .day-progress{margin-top:10px}
 .dp-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .dp-lbl{font-size:10px;font-weight:700;min-width:28px}
@@ -89,18 +89,26 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .dp-bar{height:100%;border-radius:4px;transition:width .4s ease}
 .dp-pct{font-size:10px;color:var(--muted);min-width:28px;text-align:right}
 .dt-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.dt-row{display:flex;gap:6px;flex-wrap:wrap}
-.dt-pill{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.dt-row{display:flex;gap:5px;flex-wrap:nowrap;align-items:center;overflow-x:auto}
+.dt-pill{display:flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
 .dt-pill.P{background:var(--P-bg);color:#1a6fa0}
 .dt-pill.C{background:var(--C-bg);color:#a8530d}
 .dt-pill.G{background:var(--G-bg);color:#7a5e00}
 .dt-pill.K{background:#fde8f5;color:#8a2060}
+.dt-pct{font-size:9px;opacity:.75;font-weight:700;margin-left:1px}
+.dt-meal-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #f8eef4}
+.dt-meal-row:last-of-type{border-bottom:none}
+.dt-meal-name{font-size:10px;font-weight:700;color:var(--muted);min-width:62px;flex-shrink:0}
+.dt-sep{border-top:1.5px solid #f0d8ea;margin:6px 0}
+.dt-total-row{display:flex;align-items:center;gap:8px;padding:5px 0 0}
 
 /* ── MEAL CARD ── */
 .meal-card{background:var(--card);border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
 .meal-top{padding:14px 18px 13px;display:flex;align-items:center;gap:11px;border-bottom:1px solid #f8eef4}
 .meal-time-badge{background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;padding:5px 13px;border-radius:20px;font-size:13px;font-weight:700;white-space:nowrap}
-.meal-name{font-size:15px;font-weight:700}
+.meal-name{font-size:15px;font-weight:700;flex:1}
+.meal-copy-btn{background:#fdf0f6;border:1.5px solid #f0d0e0;border-radius:8px;font-size:13px;cursor:pointer;opacity:.75;padding:3px 7px;line-height:1;margin-left:auto;color:var(--pink3);font-weight:700}
+.meal-copy-btn:hover{opacity:1;background:#fce4ef}
 
 .macro-chips-row{display:flex;flex-wrap:wrap;gap:6px 10px;padding:10px 18px 4px;align-items:center}
 .uc-group{display:flex;align-items:center;gap:3px;flex-shrink:0}
@@ -165,13 +173,20 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .sfr-PG{background:linear-gradient(135deg,#eef6fd,#fdfae5);border-left:3px solid var(--pink)}
 .sfr-remove{background:none;border:none;cursor:pointer;color:#d0b0c0;font-size:16px;padding:0 0 0 4px;line-height:1;flex-shrink:0}
 .sfr-remove:hover{color:#e05070}
+/* ── FOOD ROW DRAG & DROP ── */
+.sfr-drag-handle{cursor:grab;color:#d0c0cc;font-size:13px;padding:0 5px 0 0;flex-shrink:0;user-select:none;touch-action:none}
+.sfr-drag-handle:active{cursor:grabbing}
+.sel-food-row.food-row-dragging{opacity:.3;pointer-events:none}
+.sel-food-row.food-row-drop-before{border-top:2.5px solid var(--pink3)!important}
+.sel-food-row.food-row-drop-after{border-bottom:2.5px solid var(--pink3)!important}
+.meal-card.meal-food-drag-over{outline:2.5px dashed var(--pink3);background:linear-gradient(135deg,#fff5fa,#fef0f7)}
 
 /* ── MEAL NUTRITION SUMMARY ── */
-.meal-nut-row{margin:6px 14px 0;background:#fdf7fb;border-radius:10px;padding:5px 12px;display:flex;flex-wrap:nowrap;gap:0 8px;align-items:center;white-space:nowrap;overflow:hidden}
-.nut-inline{font-size:12px;font-weight:700;color:var(--text)}
-.nut-sep-i{color:#ddd;font-size:14px}
+.meal-nut-row{margin:6px 14px 0;background:#fdf7fb;border-radius:10px;padding:5px 12px;display:flex;flex-wrap:nowrap;gap:0 6px;align-items:center;overflow:hidden}
+.nut-inline{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap}
+.nut-sep-i{color:#ddd;font-size:12px;flex-shrink:0}
 .nut-kcal{color:var(--pink)}
-.nut-pct{font-size:9.5px;color:var(--muted)}
+.nut-pct{font-size:9px;color:var(--muted);margin-left:1px}
 .nut-sep{width:1px;height:28px;background:#f0d8e8;flex-shrink:0}
 
 /* ── EMPTY TIP ── */
@@ -209,6 +224,8 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .ext-food-name{flex:1;color:var(--text)}
 .ext-food-remove{background:none;border:none;color:#ccc;font-size:16px;cursor:pointer;padding:0 4px;line-height:1}
 .ext-food-remove:hover{color:#e05a7a}
+.ext-food-add{background:none;border:1.5px solid #d0c0cc;border-radius:50%;color:#b090a0;font-size:14px;font-weight:700;cursor:pointer;padding:0;width:22px;height:22px;line-height:20px;text-align:center;flex-shrink:0}
+.ext-food-add:hover{border-color:var(--pink);color:var(--pink)}
 .ext-food-info{flex:1;display:flex;flex-direction:column;gap:1px}
 .ext-food-qty{color:var(--muted)}
 .ext-food-nut{font-size:10px;color:#b090a0}
@@ -241,8 +258,9 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 .wch-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:16px;padding:2px 6px}
 .wch-del:hover{color:#e06070}
 .week-card-body{padding:12px 16px}
-.wc-macros{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.wc-pill{padding:4px 9px;border-radius:16px;font-size:11px;font-weight:700}
+.wc-macros{display:flex;flex-wrap:nowrap;gap:6px;margin-bottom:8px;overflow-x:auto}
+.wc-pill{padding:4px 9px;border-radius:16px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.wc-pct{font-size:9px;opacity:.7;margin-left:2px;font-weight:700}
 .wc-P{background:var(--P-bg);color:#1a6fa0}
 .wc-C{background:var(--C-bg);color:#a8530d}
 .wc-G{background:var(--G-bg);color:#7a5e00}
@@ -307,7 +325,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 
 /* ── MEALS GRID ── */
 .meals-grid{display:flex;flex-direction:row;align-items:flex-start;gap:14px;overflow-x:auto}
-.meals-grid .meal-card{flex:1;min-width:200px;margin-bottom:0}
+.meals-grid .meal-card{flex:1 1 0;min-width:300px;margin-bottom:0}
 
 /* ── RESPONSIVE ── */
 @media(min-width:600px){
@@ -321,7 +339,7 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
   .daily-totals,.fuera-card,.save-day-btn,.plan-units-bar{max-width:1140px}
   .save-day-btn{width:calc(100% - 32px)}
   .meals-grid{flex-direction:row;align-items:flex-start;gap:14px}
-  .meals-grid .meal-card{flex:1;min-width:0;margin-bottom:0}
+  .meals-grid .meal-card{flex:1 1 0;min-width:300px;margin-bottom:0}
 }
 </style>
 </head>
@@ -384,6 +402,18 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI
 <!-- ══ TAB SEMANA ══ -->
 <div id="tab-semana" class="tab-content">
   <div class="week-section" id="weekSection"></div>
+</div>
+
+<!-- ══ NUEVO DÍA MODAL ══ -->
+<div class="overlay" id="newDayOverlay" style="display:none;align-items:flex-end">
+  <div class="modal-sheet" style="padding:24px 20px 36px">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;font-size:32px;margin:10px 0 6px">🌅</div>
+    <div style="text-align:center;font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px">¡Nuevo día!</div>
+    <div style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:20px" id="newDayMsg"></div>
+    <button class="apply-btn" style="width:100%;margin-bottom:10px" onclick="savePreviousAndReset()">💾 Guardar ayer y empezar de nuevo</button>
+    <button style="width:100%;padding:11px;border:1.5px solid #e0e0e0;border-radius:13px;font-size:14px;font-weight:700;background:white;color:var(--muted);cursor:pointer" onclick="discardAndReset()">🗑 Descartar y empezar de nuevo</button>
+  </div>
 </div>
 
 <!-- ══ MODAL ══ -->
@@ -786,36 +816,54 @@ function chipDrop(mi,mac,ci,e){
 }
 // Cross-meal: drop on meal card → move chip to end of that meal
 function mealDragOver(mi,e){
+  if(FoodRowDragSrc){
+    if(FoodRowDragSrc.mi===mi)return;
+    e.preventDefault();
+    e.currentTarget.classList.add('meal-food-drag-over');
+    return;
+  }
   if(!DragSrc||DragSrc.mi===mi)return;
   e.preventDefault();
   e.currentTarget.classList.add('meal-drag-over');
 }
-function mealDragLeave(e){e.currentTarget.classList.remove('meal-drag-over');}
+function mealDragLeave(e){e.currentTarget.classList.remove('meal-drag-over','meal-food-drag-over');}
 function mealDrop(mi,e){
-  e.currentTarget.classList.remove('meal-drag-over');
+  e.currentTarget.classList.remove('meal-drag-over','meal-food-drag-over');
+  if(FoodRowDragSrc){
+    e.preventDefault();
+    const{mi:srcMi,mac,ci:srcCi,pos:srcPos}=FoodRowDragSrc;
+    FoodRowDragSrc=null;
+    if(srcMi===mi)return;
+    const srcFoods=S.sel[S.day]?.[srcMi]?.chips?.[mac]?.[srcCi];
+    if(!srcFoods||srcPos>=srcFoods.length)return;
+    const foodIdx=srcFoods[srcPos];
+    srcFoods.splice(srcPos,1);
+    if(!srcFoods.length){
+      delete S.sel[S.day][srcMi].chips[mac][srcCi];
+      if(S.sel[S.day][srcMi].chipUnits?.[mac])delete S.sel[S.day][srcMi].chipUnits[mac][srcCi];
+    }
+    if(!S.sel[S.day][mi])S.sel[S.day][mi]={};
+    const dms=S.sel[S.day][mi];
+    if(!dms.chips)dms.chips={};
+    if(!dms.chips[mac])dms.chips[mac]={};
+    // Always use a new empty slot — never merge into occupied chip
+    let newFRCi=0;
+    while((dms.chips[mac][newFRCi]||[]).length)newFRCi++;
+    dms.chips[mac][newFRCi]=[foodIdx];
+    save();renderMeals();
+    return;
+  }
   if(!DragSrc||DragSrc.mi===mi){DragSrc=null;return;}
   e.preventDefault();
   const src=DragSrc; DragSrc=null;
-  if(src.mac==='PG')return; // PG is derived, skip cross-meal
-  const srcCv=src.cv||1;
-  // Update mealMacros
-  if(!S.mealMacros)S.mealMacros={};
-  if(!S.mealMacros[S.day])S.mealMacros[S.day]={};
-  const srcM={...effectiveMealMacros(S.day,src.mi)};
-  const dstM={...effectiveMealMacros(S.day,mi)};
-  srcM[src.mac]=Math.max(0,(srcM[src.mac]||0)-srcCv);
-  if(srcM[src.mac]===0)delete srcM[src.mac];
-  dstM[src.mac]=(dstM[src.mac]||0)+srcCv;
-  S.mealMacros[S.day][src.mi]=srcM;
-  S.mealMacros[S.day][mi]=dstM;
-  // New ci = last chip of srcMac in dest after expansion
-  const newCi=Math.max(0,chipCount(dstM[src.mac]||0)-1);
-  // Move food data
+  // Move chip to destination meal — no mealMacros update (global pool)
   const srcFoods=[...(S.sel[S.day]?.[src.mi]?.chips?.[src.mac]?.[src.ci]||[])];
   const srcUnits=S.sel[S.day]?.[src.mi]?.chipUnits?.[src.mac]?.[src.ci];
   if(!S.sel[S.day])S.sel[S.day]={};
   const dms=S.sel[S.day][mi]||(S.sel[S.day][mi]={});
   if(!dms.chips)dms.chips={};if(!dms.chips[src.mac])dms.chips[src.mac]={};
+  let newCi=0;
+  while((dms.chips[src.mac][newCi]||[]).length)newCi++;
   dms.chips[src.mac][newCi]=[...srcFoods];
   if(!dms.chipUnits)dms.chipUnits={};if(!dms.chipUnits[src.mac])dms.chipUnits[src.mac]={};
   if(srcUnits!==undefined)dms.chipUnits[src.mac][newCi]=srcUnits;
@@ -827,6 +875,34 @@ function mealDrop(mi,e){
 }
 function load(){try{const d=localStorage.getItem('nut_v3');if(d){S=JSON.parse(d);}}catch(e){}}
 load();
+// Migrate: clear any stale chipUnits stored for fractional chip slots
+(function migrateChipUnits(){
+  let changed=false;
+  Object.entries(S.sel||{}).forEach(([day,dayData])=>{
+    const plan=PLANS[day];if(!plan)return;
+    Object.entries(dayData||{}).forEach(([mi_str,ms])=>{
+      if(!ms?.chipUnits)return;
+      const mi=parseInt(mi_str);
+      const meal=plan.meals[mi];if(!meal)return;
+      Object.entries(ms.chipUnits).forEach(([mac,slots])=>{
+        Object.entries(slots||{}).forEach(([ci_str,units])=>{
+          // Determine the plan value for this chip slot
+          const ci=parseInt(ci_str);
+          // Use a heuristic: if stored chipUnits < 0.45 on any slot, it's potentially corrupt
+          // Only clear if the slot's planned value is fractional (< 0.95)
+          // We detect this by checking if units stored equals a "third" of something
+          if(units>0&&units<=0.4){
+            // Check chips are actually populated
+            if((ms.chips?.[mac]?.[ci]||[]).length>0){
+              delete slots[ci_str];changed=true;
+            }
+          }
+        });
+      });
+    });
+  });
+  if(changed)save();
+})();
 
 // Modal state
 let M={open:false,mi:null,mac:null,ci:0,chipVal:1,chipUnits:1,tmp:[]};
@@ -846,13 +922,63 @@ function switchTab(t){
 // ════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════
-renderDayCards();
-if(S.day){
-  document.getElementById('mealsSection').style.display='block';
-  document.getElementById('fueraText').value=S.fuera||'';
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function yesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
+function fmtDate(iso){const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+
+function initApp(){
+  const today=todayStr();
+  // Check if it's a new calendar day
+  if(S.lastDate && S.lastDate!==today && S.day){
+    const hasData=S.sel[S.day]&&Object.keys(S.sel[S.day]).some(mi=>Object.keys(S.sel[S.day][mi]).length>0);
+    const hasExtras=(S.extras?.[S.day]?.foods||[]).length>0;
+    if(hasData||hasExtras){
+      // Show new-day prompt
+      document.getElementById('newDayMsg').textContent=
+        `Tienes alimentos registrados del ${fmtDate(S.lastDate)} (${PLANS[S.day].name}). ¿Qué hacemos con ellos?`;
+      const ov=document.getElementById('newDayOverlay');
+      ov.style.display='flex';
+      S.lastDate=today;save();
+      renderDayCards();
+      return; // Don't render meals yet — wait for user action
+    }
+  }
+  S.lastDate=today;save();
+  renderDayCards();
+  if(S.day){
+    document.getElementById('mealsSection').style.display='block';
+    document.getElementById('fueraText').value=S.fuera||'';
+    renderExtras();
+    renderMeals();
+  }
+}
+
+function savePreviousAndReset(){
+  // Save to history with yesterday's date
+  if(S.day){
+    const dayNut=calcDayNut();
+    const yest=yesterdayStr();
+    S.history=S.history.filter(h=>h.date!==yest);
+    S.history.unshift({date:yest,day:S.day,sel:JSON.parse(JSON.stringify(S.sel[S.day]||{})),fuera:S.fuera||'',nut:dayNut});
+    if(S.history.length>30)S.history=S.history.slice(0,30);
+  }
+  resetCurrentDay();
+}
+function discardAndReset(){resetCurrentDay();}
+function resetCurrentDay(){
+  if(S.day){
+    S.sel[S.day]={};
+    if(S.extras?.[S.day])delete S.extras[S.day];
+    S.fuera='';
+  }
+  save();
+  document.getElementById('newDayOverlay').style.display='none';
+  document.getElementById('fueraText').value='';
   renderExtras();
   renderMeals();
 }
+
+initApp();
 
 function renderDayCards(){
   document.getElementById('dayGrid').innerHTML=Object.entries(PLANS).map(([k,p])=>
@@ -878,6 +1004,7 @@ function selectDay(k){
 function chipCount(tot){let n=Math.floor(tot);if(tot%1>=0.25)n++;return n;}
 function chipVal(tot,ci){if(ci<Math.floor(tot))return 1;const f=tot%1;return(ci===Math.floor(tot)&&f>=0.25)?f:0;}
 function chipConsumedVal(ms,mac,ci,defaultVal){
+  if(defaultVal<0.95)return defaultVal; // chips fraccionarios siempre se consumen enteros
   return ms.chipUnits?.[mac]?.[ci]??defaultVal;
 }
 function chipHasFood(ms,mac,ci){return(ms.chips?.[mac]?.[ci]||[]).length>0;}
@@ -907,59 +1034,29 @@ function effectiveMealMacros(day,mi){
 }
 
 function calcMealNut(mi){
-  const plan=PLANS[S.day];
-  const meal=plan.meals[mi];
   const ms=S.sel[S.day]?.[mi]||{};
   let p=0,c=0,g=0,k=0,hasData=false;
-  const effMacros=effectiveMealMacros(S.day,mi);
-  const pT=effMacros.P||0,gT=effMacros.G||0;
-  const maxPG=Math.min(pT,gT);
-  const pgC=pgConsumedFromChips(ms,maxPG);
-  const pFree=Math.max(0,pT-pgC),gFree=Math.max(0,gT-pgC);
   // P+G chips
-  for(let ci=0;ci<chipCount(maxPG);ci++){
-    const cv=chipConsumedVal(ms,'PG',ci,chipVal(maxPG,ci));
-    const foods=ms.chips?.['PG']?.[ci]||[];
-    if(!foods.length)continue;
-    const share=cv/foods.length;
-    foods.forEach(idx=>{const f=FOODS.P[idx];if(f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
+  if(ms.chips?.PG){
+    Object.entries(ms.chips.PG).forEach(([ci_str,foods])=>{
+      const ci=parseInt(ci_str);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=ms.chipUnits?.PG?.[ci]??1;
+      const share=cv/(foods.length||1);
+      const lookupMac=ms.chipSrcMac?.PG?.[ci]||'P';
+      foods.forEach(idx=>{const f=(FOODS[lookupMac]||FOODS.P)[idx];if(f&&f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
+    });
   }
-  // Regular macros
-  const effMap={P:pFree,G:gFree};
-  Object.entries(effMacros).forEach(([mac,planUnits])=>{
-    const eff=effMap[mac]!==undefined?effMap[mac]:planUnits;
-    if(eff<=0)return;
-    for(let ci=0;ci<chipCount(eff);ci++){
-      const planCv=chipVal(eff,ci);
-      const cv=chipConsumedVal(ms,mac,ci,planCv);
-      const foods=ms.chips?.[mac]?.[ci]||[];
-      if(foods.length){
-        const share=cv/foods.length;
-        const lookupMac=ms.chipSrcMac?.[mac]?.[ci]||mac;
-        foods.forEach(idx=>{const f=(FOODS[lookupMac]||FOODS[mac])[idx];if(f&&f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
-      }
-      // Remainder chip (if partial selection)
-      if(cv<planCv*0.95){
-        const remCv=planCv-cv;
-        const remFoods=ms.chips?.[mac]?.[REM+ci]||[];
-        if(remFoods.length){
-          const share=remCv/remFoods.length;
-          const lookupMac=ms.chipSrcMac?.[mac]?.[REM+ci]||mac;
-          remFoods.forEach(idx=>{const f=(FOODS[lookupMac]||FOODS[mac])[idx];if(f&&f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
-        }
-      }
-    }
-  });
-  // Extra V/F chips beyond plan (added to any meal)
-  ['V','F'].forEach(mac=>{
-    const planUnits=effMacros[mac]||0;
+  // Regular macro chips
+  ['P','C','G','F','V'].forEach(mac=>{
     if(!ms.chips?.[mac])return;
     Object.entries(ms.chips[mac]).forEach(([ci_str,foods])=>{
       const ci=parseInt(ci_str);
-      if(ci>=REM||!(foods||[]).length||ci<chipCount(planUnits))return;
-      const cv=chipConsumedVal(ms,mac,ci,1);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=ms.chipUnits?.[mac]?.[ci]??1;
       const share=cv/(foods.length||1);
-      foods.forEach(idx=>{const f=(FOODS[mac]||[])[idx];if(f&&f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
+      const lookupMac=ms.chipSrcMac?.[mac]?.[ci]||mac;
+      foods.forEach(idx=>{const f=(FOODS[lookupMac]||FOODS[mac])[idx];if(f&&f.m){p+=f.m[0]*share;c+=f.m[1]*share;g+=f.m[2]*share;k+=f.m[3]*share;hasData=true;}});
     });
   });
   return hasData?{p,c,g,k}:null;
@@ -1034,98 +1131,109 @@ function renderMeals(){
   const mSel=S.sel[S.day]||{};
   const dayNut=calcDayNut();
 
-  // ── Plan units bar (top) — individual unit dots per meal ──
-  const puEl=document.getElementById('planUnitsBar');
-  function dotStr(val,cls,done){
-    const dc=done?' pud-done':'';
-    let h='',r=val;
-    while(r>=0.95){h+=`<span class="pud pud-full ${cls}${dc}"></span>`;r-=1;}
-    if(r>=0.4)h+=`<span class="pud pud-half ${cls}${dc}"></span>`;
-    else if(r>=0.25)h+=`<span class="pud pud-third ${cls}${dc}"></span>`;
-    return h;
-  }
-  const allMacs=['P','C','G','F','V'].filter(m=>plan.meals.some((ml,mi)=>(effectiveMealMacros(S.day,mi)[m]||0)>0));
-  const dotCls={P:'pud-P',C:'pud-C',G:'pud-G',F:'pud-F',V:'pud-V'};
-  const puRows=allMacs.map(mac=>{
-    const groups=plan.meals.map((meal,mi)=>{
-      const effM=effectiveMealMacros(S.day,mi);
-      if(!effM[mac])return '';
-      const effMeal2={...meal,macros:effM};
-      const done=isMacroAgotado(effMeal2,mSel[mi]||{},mac);
-      return `<span class="pu-meal-grp">${dotStr(effM[mac],dotCls[mac],done)}</span>`;
-    }).filter(Boolean);
-    return `<div class="pu-mac-row">
-      <span class="pu-mac-lbl ${dotCls[mac]}-lbl">${ME[mac]} ${ML[mac]}</span>
-      <div class="pu-dots">${groups.join('<span class="pu-meal-sep"></span>')}</div>
-    </div>`;
-  }).join('');
-  puEl.innerHTML=`<div class="pu-label">📋 Plan de hoy</div>${puRows}`;
-  puEl.style.display='block';
+  // ── Plan units bar — hidden ──
+  document.getElementById('planUnitsBar').style.display='none';
 
   // Daily totals bar
   const dtEl=document.getElementById('dailyTotals');
-  // Compute daily fill progress (chips filled / total chips)
-  let totalChips=0,filledChips=0;
+  // Per-macro chip units consumed (meals only) vs plan, plus overall progress
+  let planUnits=0,cnsUnits=0;
+  let totP2=0,totC2=0,totG2=0,totF2=0,totV2=0;
+  let cnsP2=0,cnsC2=0,cnsG2=0,cnsF2=0,cnsV2=0,cnsPG2=0;
+  plan.meals.forEach(m=>{const pm=m.macros;totP2+=pm.P||0;totC2+=pm.C||0;totG2+=pm.G||0;totF2+=pm.F||0;totV2+=pm.V||0;});
+  planUnits=totP2+totC2+totG2+totF2+totV2;
   plan.meals.forEach((meal,mi)=>{
     const ms=mSel[mi]||{};
-    const pT=meal.macros.P||0,gT=meal.macros.G||0;
-    const maxPG_=Math.min(pT,gT);
-    const pgC_=pgConsumedFromChips(ms,maxPG_);
-    const pFr_=Math.max(0,pT-pgC_),gFr_=Math.max(0,gT-pgC_);
-    const effMap_={P:pFr_,G:gFr_};
-    // Count PG chips
-    if(maxPG_>0){
-      const n=chipCount(maxPG_);
-      totalChips+=n;
-      for(let ci=0;ci<n;ci++){if(chipHasFood(ms,'PG',ci))filledChips++;}
+    if(ms.chips?.PG){
+      Object.entries(ms.chips.PG).forEach(([ci_str,foods])=>{
+        const ci=parseInt(ci_str);
+        if(ci>=REM||(foods||[]).length===0)return;
+        const u=ms.chipUnits?.PG?.[ci]??1;
+        cnsPG2+=u;cnsUnits+=2*u;
+      });
     }
-    Object.entries(meal.macros).forEach(([mac,planUnits])=>{
-      const eff=effMap_[mac]!==undefined?effMap_[mac]:planUnits;
-      if(eff<=0)return;
-      const n=chipCount(eff);
-      totalChips+=n;
-      for(let ci=0;ci<n;ci++){if(chipHasFood(ms,mac,ci))filledChips++;}
+    ['P','C','G','F','V'].forEach(mac=>{
+      if(!ms.chips?.[mac])return;
+      Object.entries(ms.chips[mac]).forEach(([ci_str,foods])=>{
+        const ci=parseInt(ci_str);
+        if(ci>=REM||(foods||[]).length===0)return;
+        const u=ms.chipUnits?.[mac]?.[ci]??1;
+        cnsUnits+=u;
+        if(mac==='P')cnsP2+=u;else if(mac==='C')cnsC2+=u;
+        else if(mac==='G')cnsG2+=u;else if(mac==='F')cnsF2+=u;else if(mac==='V')cnsV2+=u;
+      });
     });
   });
-  const dayPct=totalChips>0?Math.round(filledChips/totalChips*100):0;
+  const macPct=(cns,plan)=>plan>0?Math.round(cns/plan*100):null;
+  const dayPct=planUnits>0?Math.round(cnsUnits/planUnits*100):0;
+  const over=dayPct>100;
+  const barColor=over?'linear-gradient(90deg,#e05a3a,#e8803a)':'linear-gradient(90deg,var(--pink),#e8609a)';
   const progressBar=`<div class="day-progress">
     <div class="dp-row">
       <span class="dp-lbl" style="color:var(--pink3)">📋</span>
       <div class="dp-bar-wrap">
-        <div class="dp-bar" style="width:${dayPct}%;background:linear-gradient(90deg,var(--pink),#e8609a)"></div>
+        <div class="dp-bar" style="width:${Math.min(dayPct,100)}%;background:${barColor}"></div>
       </div>
-      <span class="dp-pct">${dayPct}%</span>
+      <span class="dp-pct" style="${over?'color:#e05a3a;font-weight:800':''}">${dayPct}%</span>
     </div>
   </div>`;
   const extNut=calcExtrasNut(S.day);
+  const dpct=(c)=>`<span class="dt-pct">${c}%</span>`;
+  const mealPills=(n,withPct,ref)=>{
+    const pp=ref&&ref.p>0?Math.round(n.p/ref.p*100):null;
+    const cp=ref&&ref.c>0?Math.round(n.c/ref.c*100):null;
+    const gp=ref&&ref.g>0?Math.round(n.g/ref.g*100):null;
+    const kp=ref&&ref.k>0?Math.round(n.k/ref.k*100):null;
+    return `<div class="dt-row">
+      <div class="dt-pill P">🥩 <b>${Math.round(n.p)}g</b>${withPct&&pp!==null?dpct(pp):''}</div>
+      <div class="dt-pill C">🌾 <b>${Math.round(n.c)}g</b>${withPct&&cp!==null?dpct(cp):''}</div>
+      <div class="dt-pill G">🥑 <b>${Math.round(n.g)}g</b>${withPct&&gp!==null?dpct(gp):''}</div>
+      <div class="dt-pill K">🔥 <b>${Math.round(n.k)} kcal</b>${withPct&&kp!==null?dpct(kp):''}</div>
+    </div>`;
+  };
   if(dayNut){
-    const extRow=extNut?`<div class="dt-row dt-extras-row">
-      <span class="dt-extras-lbl">➕ Extras:</span>
-      <div class="dt-pill P">🥩 <b>${Math.round(extNut.p)}g</b></div>
-      <div class="dt-pill C">🌾 <b>${Math.round(extNut.c)}g</b></div>
-      <div class="dt-pill G">🥑 <b>${Math.round(extNut.g)}g</b></div>
-      <div class="dt-pill K">🔥 <b>${Math.round(extNut.k)} kcal</b></div>
+    // Per-meal rows
+    let mealRows='';
+    plan.meals.forEach((meal,mi)=>{
+      const mn=calcMealNut(mi);
+      if(!mn)return;
+      mealRows+=`<div class="dt-meal-row">
+        <span class="dt-meal-name">${meal.name}</span>
+        ${mealPills(mn,true,dayNut)}
+      </div>`;
+    });
+    // Extras row (no %)
+    const extRow=extNut?`<div class="dt-meal-row">
+      <span class="dt-meal-name">➕ Extras</span>
+      ${mealPills(extNut,true,dayNut)}
     </div>`:'';
-    dtEl.innerHTML=`<div class="dt-title">📊 Total del día (alimentos seleccionados)</div>
-    <div class="dt-row">
-      <div class="dt-pill P">🥩 P: <b>${Math.round(dayNut.p)}g</b></div>
-      <div class="dt-pill C">🌾 CH: <b>${Math.round(dayNut.c)}g</b></div>
-      <div class="dt-pill G">🥑 G: <b>${Math.round(dayNut.g)}g</b></div>
-      <div class="dt-pill K">🔥 <b>${Math.round(dayNut.k)} kcal</b></div>
-    </div>${extRow}${progressBar}`;
+    // Total row with distribution %
+    const k=dayNut.k||1;
+    const totalRow=`<div class="dt-total-row">
+      <span class="dt-meal-name" style="color:var(--pink3);font-size:11px">Total</span>
+      <div class="dt-row">
+        <div class="dt-pill P">🥩 <b>${Math.round(dayNut.p)}g</b>${dpct(Math.round(dayNut.p*4/k*100))}</div>
+        <div class="dt-pill C">🌾 <b>${Math.round(dayNut.c)}g</b>${dpct(Math.round(dayNut.c*4/k*100))}</div>
+        <div class="dt-pill G">🥑 <b>${Math.round(dayNut.g)}g</b>${dpct(Math.round(dayNut.g*9/k*100))}</div>
+        <div class="dt-pill K">🔥 <b>${Math.round(dayNut.k)} kcal</b></div>
+      </div>
+    </div>`;
+    dtEl.innerHTML=`<div class="dt-title">📊 Total del día</div>
+    ${mealRows}${extRow}
+    <div class="dt-sep"></div>
+    ${totalRow}
+    ${progressBar}`;
     dtEl.style.display='block';
   } else {
     dtEl.innerHTML=`<div class="dt-title" style="margin:0">📊 Selecciona alimentos para ver los totales del día</div>${progressBar}`;
     dtEl.style.display='block';
   }
 
-  const otherDays=Object.entries(PLANS).filter(([k])=>k!==S.day);
-  const copyBtns=otherDays.map(([k,p])=>`<button class="db-copy-btn" onclick="copyDay('${S.day}','${k}')">📋 Copiar a ${p.name}</button>`).join('');
   document.getElementById('mealsWrap').innerHTML=
     `<div class="day-banner">
       <div class="db-icon">${plan.icon}</div>
       <div><div class="db-name">${plan.name}</div><div class="db-desc">${plan.desc}</div></div>
-      <div class="db-actions">${copyBtns}<button class="db-del-btn" onclick="clearDay('${S.day}')">🗑 Borrar día</button></div>
+      <div class="db-actions"><button class="db-del-btn" onclick="clearDay('${S.day}')">🗑 Borrar día</button></div>
     </div>
     ${renderDayBox()}
     <div class="meals-grid">`+
@@ -1140,43 +1248,30 @@ function renderDayBox(){
   let cnsP=0,cnsC=0,cnsG=0,cnsF=0,cnsV=0,cnsPG=0;
   plan.meals.forEach((meal,mi)=>{
     const ms=mSel[mi]||{};
-    const eff=effectiveMealMacros(S.day,mi);
-    const pT=eff.P||0,gT=eff.G||0,cT=eff.C||0,fT=eff.F||0,vT=eff.V||0;
-    const maxPG_=Math.min(pT,gT);
-    const pgC=pgConsumedFromChips(ms,maxPG_);
-    const pFr=Math.max(0,pT-pgC),gFr=Math.max(0,gT-pgC);
-    totP+=pT;totC+=cT;totG+=gT;totF+=fT;totV+=vT;
-    cnsPG+=pgC;
-    // Suma consumido real + REM slot si tiene comida
-    const sumCns=(mac,total)=>{
-      let s=0;
-      for(let ci=0;ci<chipCount(total);ci++){
-        if(!chipHasFood(ms,mac,ci))continue;
-        const planned=chipVal(total,ci);
-        const cv=chipConsumedVal(ms,mac,ci,planned);
-        s+=cv;
-        if(chipHasFood(ms,mac,REM+ci))s+=Math.max(0,planned-cv);
-      }
-      return s;
-    };
-    cnsP+=sumCns('P',pFr);
-    cnsG+=sumCns('G',gFr);
-    cnsC+=sumCns('C',cT);
-    cnsF+=sumCns('F',fT);
-    cnsV+=sumCns('V',vT);
-    // Extra V/F chips beyond plan (any meal can have extra V/F)
-    if(ms.chips){
-      ['V','F'].forEach(mac=>{
-        if(!ms.chips[mac])return;
-        const planCount=mac==='V'?chipCount(vT):chipCount(fT);
-        Object.entries(ms.chips[mac]).forEach(([ci_str,foods])=>{
-          const ci=parseInt(ci_str);
-          if(ci>=REM||!(foods||[]).length||ci<planCount)return;
-          const u=chipConsumedVal(ms,mac,ci,1);
-          if(mac==='V'){cnsV+=u;totV+=u;}else{cnsF+=u;totF+=u;}
-        });
+    const pm=plan.meals[mi].macros;
+    totP+=(pm.P||0);totC+=(pm.C||0);totG+=(pm.G||0);totF+=(pm.F||0);totV+=(pm.V||0);
+    // PG chips
+    if(ms.chips?.PG){
+      Object.entries(ms.chips.PG).forEach(([ci_str,foods])=>{
+        const ci=parseInt(ci_str);
+        if(ci>=REM||!(foods||[]).length)return;
+        cnsPG+=(ms.chipUnits?.PG?.[ci]??1);
       });
     }
+    // Regular macro chips — count directly from stored data
+    ['P','C','G','F','V'].forEach(mac=>{
+      if(!ms.chips?.[mac])return;
+      Object.entries(ms.chips[mac]).forEach(([ci_str,foods])=>{
+        const ci=parseInt(ci_str);
+        if(ci>=REM||!(foods||[]).length)return;
+        const u=ms.chipUnits?.[mac]?.[ci]??1;
+        if(mac==='P')cnsP+=u;
+        else if(mac==='C')cnsC+=u;
+        else if(mac==='G')cnsG+=u;
+        else if(mac==='F')cnsF+=u;
+        else if(mac==='V')cnsV+=u;
+      });
+    });
   });
   // Extras fuera de dieta
   const ext=calcExtrasMacros(S.day);
@@ -1244,23 +1339,12 @@ function renderDayBox(){
 }
 
 function renderMealCard(meal,mi,mSel,dayNut){
-  const effMacros=effectiveMealMacros(S.day,mi);
-  const effMeal={...meal,macros:effMacros};
-  const hasP=effMacros.P!==undefined,hasG=effMacros.G!==undefined;
-  const pTotal=effMacros.P||0,gTotal=effMacros.G||0;
-  const hasBothPG=hasP&&hasG;
-
-  // ── Individual unit chips per macro ──
-  const maxPG=Math.min(pTotal,gTotal);
-  const pgConsumed=pgConsumedFromChips(mSel,maxPG);
-  const pFree=Math.max(0,pTotal-pgConsumed);
-  const gFree=Math.max(0,gTotal-pgConsumed);
-
+  // ── Global pool: no per-meal macro restrictions ──
   const MAC_LBL={P:'P',C:'CH',G:'G',F:'F',V:'V',PG:'P+G'};
   const mkChip=(mac,cv,ci,label,clickMi)=>{
     const hasFd=chipHasFood(mSel,mac,ci);
     const consumed=hasFd?chipConsumedVal(mSel,mac,ci,cv):0;
-    const isDone=hasFd&&consumed>=cv*0.95;
+    const isDone=hasFd&&(cv<0.95||consumed>=cv*0.95); // fractional chips always done if they have food
     // If food was dragged from another mac, show that mac's color + label
     const visMac=mSel.chipSrcMac?.[mac]?.[ci]||mac;
     const visLbl=MAC_LBL[visMac]||(MAC_LBL[mac]);
@@ -1271,113 +1355,84 @@ function renderMealCard(meal,mi,mSel,dayNut){
   };
 
   let chips='';
-  Object.entries(effMacros).forEach(([mac,planUnits])=>{
-    const eff=mac==='P'?pFree:(mac==='G'?gFree:planUnits);
-    if(eff<=0)return;
-    const lbl={P:'P',C:'CH',G:'G',F:'F',V:'V'}[mac];
-    if(!lbl)return;
-    let grp='';
-    for(let ci=0;ci<chipCount(eff);ci++){
-      const cv=chipVal(eff,ci);
-      // Only show chips that have food assigned
-      if(!chipHasFood(mSel,mac,ci)){
-        // Still show REM slot if the previous chip is partial (needs complement)
-        continue;
-      }
-      const label=cv<0.95?(cv>=0.45?`${lbl}½`:`${lbl}⅓`):lbl;
-      grp+=mkChip(mac,cv,ci,label,mi);
-      const consumed=chipConsumedVal(mSel,mac,ci,cv);
-      if(consumed<cv*0.95){
-        // Partial: show REM slot so user can assign the remainder
-        const remCv=cv-consumed;
-        const remLbl=remCv<0.45?`${lbl}⅓`:`${lbl}½`;
-        grp+=mkChip(mac,remCv,REM+ci,remLbl,mi);
-      }
-    }
-    if(!grp)return;
-    chips+=`<div class="uc-group">${grp}</div>`;
-  });
-  // P+G chips — only filled ones
-  if(hasBothPG&&maxPG>0){
+  // PG chips — iterate stored chips directly (no per-meal plan gate)
+  if(mSel.chips?.PG){
     let pgGrp='';
-    for(let ci=0;ci<chipCount(maxPG);ci++){
-      const cv=chipVal(maxPG,ci);
-      const hasFd=chipHasFood(mSel,'PG',ci);
-      if(!hasFd)continue;
+    Object.entries(mSel.chips.PG).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).forEach(([ci_str,foods])=>{
+      const ci=parseInt(ci_str);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=mSel.chipUnits?.PG?.[ci]??1;
       const consumed=chipConsumedVal(mSel,'PG',ci,cv);
       const pgChipDone=consumed>=cv*0.95;
-      const pgVisMac=mSel.chipSrcMac?.['PG']?.[ci]||'PG';
-      const fracCls=(!pgChipDone&&cv<0.95)?(cv>=0.45?' ucb-half':' ucb-third'):'';
+      const pgVisMac=mSel.chipSrcMac?.PG?.[ci]||'PG';
       const pgBaseLbl=MAC_LBL[pgVisMac]||'P+G';
       const label=cv<0.95?(cv>=0.45?`${pgBaseLbl}½`:`${pgBaseLbl}⅓`):pgBaseLbl;
+      const fracCls=(!pgChipDone&&cv<0.95)?(cv>=0.45?' ucb-half':' ucb-third'):'';
       const pgStateCls=pgChipDone?' ucb-done':' ucb-partial';
       pgGrp+=`<button class="ucb ucb-${pgVisMac}${fracCls}${pgStateCls}" onclick="openModal(${mi},'PG',${ci},${cv})">${label}</button>`;
-    }
+    });
     if(pgGrp)chips+=`<div class="uc-group">${pgGrp}</div>`;
   }
-  // Extra V/F chips — always add button to add more
-  ['V','F'].forEach(mac=>{
-    const planUnits=effMacros[mac]||0;
-    // Find all extra filled chips (beyond plan range)
-    const extraGrp_chips=[];
-    if(mSel.chips?.[mac]){
-      Object.entries(mSel.chips[mac]).forEach(([ci_str,foods])=>{
-        const ci=parseInt(ci_str);
-        if(ci>=REM||!(foods||[]).length||ci<chipCount(planUnits))return;
-        const consumed=chipConsumedVal(mSel,mac,ci,1);
-        const isDone=consumed>=0.95;
-        const stateCls=isDone?' ucb-done':' ucb-partial';
-        extraGrp_chips.push(`<button class="ucb ucb-${mac}${stateCls}" onclick="openModal(${mi},'${mac}',${ci},1)">${mac}</button>`);
-      });
-    }
-    // Next free ci for a new extra chip
-    let nextCi=chipCount(planUnits);
-    while(mSel.chips?.[mac]?.[nextCi]?.length)nextCi++;
-    extraGrp_chips.push(`<button class="ucb ucb-${mac} ucb-add-vf" onclick="openModal(${mi},'${mac}',${nextCi},1)">+${mac}</button>`);
-    chips+=`<div class="uc-group">${extraGrp_chips.join('')}</div>`;
+  // Regular macro chips — iterate stored chips directly
+  ['P','C','G','F','V'].forEach(mac=>{
+    if(!mSel.chips?.[mac])return;
+    let grp='';
+    Object.entries(mSel.chips[mac]).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).forEach(([ci_str,foods])=>{
+      const ci=parseInt(ci_str);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=mSel.chipUnits?.[mac]?.[ci]??1;
+      const lbl={P:'P',C:'CH',G:'G',F:'F',V:'V'}[mac];
+      grp+=mkChip(mac,cv,ci,lbl,mi);
+    });
+    if(grp)chips+=`<div class="uc-group">${grp}</div>`;
   });
 
   // ── Selected food rows ──
   const mealNut=calcMealNut(mi);
   const allFoodRows=[];
-  const meal_pT=effMacros.P||0,meal_gT=effMacros.G||0;
-  const meal_maxPG=Math.min(meal_pT,meal_gT);
 
-  // P+G rows (per chip)
-  for(let ci=0;ci<chipCount(meal_maxPG);ci++){
-    const cv=chipConsumedVal(mSel,'PG',ci,chipVal(meal_maxPG,ci));
-    const foods=mSel.chips?.['PG']?.[ci]||[];
-    if(!foods.length)continue;
-    const share=cv/foods.length;
-    const pgLookupMac=mSel.chipSrcMac?.['PG']?.[ci]||'P';
-    foods.forEach(idx=>{
-      const f=(FOODS[pgLookupMac]||FOODS.P)[idx];
-      if(!f)return;
-      const qStr=f.q!==null?calcQty(f,share):'';
-      let nutStr='';
-      if(f.m&&share>0){
-        const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
-        nutStr=`<div class="sfr-macros-mini">🥩🥑 P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
-      }
-      allFoodRows.push(`<div class="sel-food-row sfr-PG">
-        <div class="sfr-left"><div class="sfr-name">🥩🥑 ${f.n}</div>${nutStr}</div>
-        ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty qPG">${qStr}</div>`}
-        <button class="sfr-remove" onclick="removeFood(${mi},'PG',${ci},${idx})" title="Quitar">×</button>
-      </div>`);
+  // P+G food rows — iterate stored chips directly
+  if(mSel.chips?.PG){
+    Object.entries(mSel.chips.PG).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).forEach(([ci_str,foods])=>{
+      const ci=parseInt(ci_str);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=mSel.chipUnits?.PG?.[ci]??1;
+      const share=cv/(foods.length||1);
+      const pgLookupMac=mSel.chipSrcMac?.PG?.[ci]||'P';
+      foods.forEach((idx,pos)=>{
+        const f=(FOODS[pgLookupMac]||FOODS.P)[idx];
+        if(!f)return;
+        const qStr=f.q!==null?calcQty(f,share):'';
+        let nutStr='';
+        if(f.m&&share>0){
+          const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
+          nutStr=`<div class="sfr-macros-mini">🥩🥑 P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
+        }
+        allFoodRows.push(`<div class="sel-food-row sfr-PG" draggable="true"
+          ondragstart="foodRowDragStart(${mi},'PG',${ci},${pos},event)"
+          ondragend="foodRowDragEnd(event)"
+          ondragover="foodRowDragOver(${mi},'PG',${ci},${pos},event)"
+          ondragleave="foodRowDragLeave(event)"
+          ondrop="foodRowDrop(${mi},'PG',${ci},${pos},event)">
+          <span class="sfr-drag-handle">⠿</span>
+          <div class="sfr-left"><div class="sfr-name">🥩🥑 ${f.n}</div>${nutStr}</div>
+          ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty qPG">${qStr}</div>`}
+          <button class="sfr-remove" onclick="removeFood(${mi},'PG',${ci},${idx})" title="Quitar">×</button>
+        </div>`);
+      });
     });
   }
 
-  // Regular macro rows (per chip)
-  Object.entries(effMacros).forEach(([mac,planUnits])=>{
-    const eff=mac==='P'?pFree:(mac==='G'?gFree:planUnits);
-    if(eff<=0)return;
-    for(let ci=0;ci<chipCount(eff);ci++){
-      const cv=chipConsumedVal(mSel,mac,ci,chipVal(eff,ci));
-      const foods=mSel.chips?.[mac]?.[ci]||[];
-      if(!foods.length)continue;
-      const share=cv/foods.length;
+  // Regular macro food rows — iterate stored chips directly
+  ['P','C','G','F','V'].forEach(mac=>{
+    if(!mSel.chips?.[mac])return;
+    Object.entries(mSel.chips[mac]).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).forEach(([ci_str,foods])=>{
+      const ci=parseInt(ci_str);
+      if(ci>=REM||!(foods||[]).length)return;
+      const cv=mSel.chipUnits?.[mac]?.[ci]??1;
+      const share=cv/(foods.length||1);
       const lookupMac=mSel.chipSrcMac?.[mac]?.[ci]||mac;
-      foods.forEach(idx=>{
+      foods.forEach((idx,pos)=>{
         const f=(FOODS[lookupMac]||FOODS[mac])[idx];
         if(!f)return;
         const dispMac=lookupMac;
@@ -1387,59 +1442,15 @@ function renderMealCard(meal,mi,mSel,dayNut){
           const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
           nutStr=`<div class="sfr-macros-mini">P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
         }
-        allFoodRows.push(`<div class="sel-food-row sfr-${dispMac}">
+        allFoodRows.push(`<div class="sel-food-row sfr-${dispMac}" draggable="true"
+          ondragstart="foodRowDragStart(${mi},'${mac}',${ci},${pos},event)"
+          ondragend="foodRowDragEnd(event)"
+          ondragover="foodRowDragOver(${mi},'${mac}',${ci},${pos},event)"
+          ondragleave="foodRowDragLeave(event)"
+          ondrop="foodRowDrop(${mi},'${mac}',${ci},${pos},event)">
+          <span class="sfr-drag-handle">⠿</span>
           <div class="sfr-left"><div class="sfr-name">${ME[dispMac]} ${f.n}</div>${nutStr}</div>
           ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty q${dispMac}">${qStr}</div>`}
-          <button class="sfr-remove" onclick="removeFood(${mi},'${mac}',${ci},${idx})" title="Quitar">×</button>
-        </div>`);
-      });
-      // Remainder chip food rows (REM+ci)
-      const remFoods=mSel.chips?.[mac]?.[REM+ci]||[];
-      if(remFoods.length){
-        const planCv=chipVal(eff,ci);
-        const remCv=planCv-cv;
-        const remShare=remCv/remFoods.length;
-        const remLookupMac=mSel.chipSrcMac?.[mac]?.[REM+ci]||mac;
-        remFoods.forEach(idx=>{
-          const f=(FOODS[remLookupMac]||FOODS[mac])[idx];
-          if(!f)return;
-          const dispMac=remLookupMac;
-          const qStr=(f.q!==null&&remShare>0)?calcQty(f,remShare):'';
-          let nutStr='';
-          if(f.m&&remShare>0){
-            const fp=Math.round(f.m[0]*remShare),fc=Math.round(f.m[1]*remShare),fg=Math.round(f.m[2]*remShare),fk=Math.round(f.m[3]*remShare);
-            nutStr=`<div class="sfr-macros-mini">P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
-          }
-          allFoodRows.push(`<div class="sel-food-row sfr-${dispMac}">
-            <div class="sfr-left"><div class="sfr-name">${ME[dispMac]} ${f.n}</div>${nutStr}</div>
-            ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty q${dispMac}">${qStr}</div>`}
-            <button class="sfr-remove" onclick="removeFood(${mi},'${mac}',${REM+ci},${idx})" title="Quitar">×</button>
-          </div>`);
-        });
-      }
-    }
-  });
-  // Extra V/F food rows beyond plan
-  ['V','F'].forEach(mac=>{
-    const planUnits=effMacros[mac]||0;
-    if(!mSel.chips?.[mac])return;
-    Object.entries(mSel.chips[mac]).forEach(([ci_str,foods])=>{
-      const ci=parseInt(ci_str);
-      if(ci>=REM||!(foods||[]).length||ci<chipCount(planUnits))return;
-      const cv=chipConsumedVal(mSel,mac,ci,1);
-      const share=cv/(foods.length||1);
-      foods.forEach(idx=>{
-        const f=(FOODS[mac]||[])[idx];
-        if(!f)return;
-        const qStr=(f.q!==null&&share>0)?calcQty(f,share):'';
-        let nutStr='';
-        if(f.m&&share>0){
-          const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
-          nutStr=`<div class="sfr-macros-mini">P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
-        }
-        allFoodRows.push(`<div class="sel-food-row sfr-${mac}">
-          <div class="sfr-left"><div class="sfr-name">${ME[mac]} ${f.n}</div>${nutStr}</div>
-          ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty q${mac}">${qStr}</div>`}
           <button class="sfr-remove" onclick="removeFood(${mi},'${mac}',${ci},${idx})" title="Quitar">×</button>
         </div>`);
       });
@@ -1451,14 +1462,20 @@ function renderMealCard(meal,mi,mSel,dayNut){
   // Nutrition summary row
   let nutRow='';
   if(mealNut){
+    const pct=(a,b)=>b>0?Math.round(a/b*100):0;
+    const pp=dayNut?pct(mealNut.p,dayNut.p):null;
+    const cp=dayNut?pct(mealNut.c,dayNut.c):null;
+    const gp=dayNut?pct(mealNut.g,dayNut.g):null;
+    const kp=dayNut?pct(mealNut.k,dayNut.k):null;
+    const ps=(v,p)=>p!==null?` <span class="nut-pct">${p}%</span>`:'';
     nutRow=`<div class="meal-nut-row">
-      <span class="nut-inline">🥩 ${Math.round(mealNut.p)}g</span>
+      <span class="nut-inline">🥩 ${Math.round(mealNut.p)}g${ps('p',pp)}</span>
       <span class="nut-sep-i">·</span>
-      <span class="nut-inline">🌾 ${Math.round(mealNut.c)}g</span>
+      <span class="nut-inline">🌾 ${Math.round(mealNut.c)}g${ps('c',cp)}</span>
       <span class="nut-sep-i">·</span>
-      <span class="nut-inline">🥑 ${Math.round(mealNut.g)}g</span>
+      <span class="nut-inline">🥑 ${Math.round(mealNut.g)}g${ps('g',gp)}</span>
       <span class="nut-sep-i">·</span>
-      <span class="nut-inline nut-kcal">🔥 ${Math.round(mealNut.k)} kcal</span>
+      <span class="nut-inline nut-kcal">🔥 ${Math.round(mealNut.k)} kcal${ps('k',kp)}</span>
     </div>`;
   }
 
@@ -1466,6 +1483,7 @@ function renderMealCard(meal,mi,mSel,dayNut){
     <div class="meal-top">
       <div class="meal-time-badge">${meal.time}</div>
       <div class="meal-name">${meal.name}</div>
+      <button class="meal-copy-btn" onclick="copyMeal(${mi})" title="Copiar comida a otro día">📋 Copiar</button>
     </div>
     ${nutRow}
     <div class="macro-chips-row">${chips}</div>
@@ -1557,6 +1575,7 @@ function renderExtras(){
     rows+=`<div class="ext-food-row">
       <span class="ext-food-mac ext-food-mac-${mac}">${MAC_LBL_EXT[mac]||mac}</span>
       <div class="ext-food-info"><span class="ext-food-name">${f.n}${qStr?` · <small class="ext-food-qty">${qStr}</small>`:''}</span>${nutStr}</div>
+      <button class="ext-food-add" onclick="addExtraFoodUnit('${mac}',${idx})" title="Añadir otra unidad">+</button>
       <button class="ext-food-remove" onclick="removeExtrasFood(${i})" title="Quitar">×</button>
     </div>`;
   });
@@ -1581,6 +1600,13 @@ function renderExtras(){
 function removeExtrasFood(i){
   if(!S.extras?.[S.day]?.foods)return;
   S.extras[S.day].foods.splice(i,1);
+  save();renderExtras();renderMeals();
+}
+function addExtraFoodUnit(mac,idx){
+  if(!S.extras)S.extras={};
+  if(!S.extras[S.day])S.extras[S.day]={};
+  if(!S.extras[S.day].foods)S.extras[S.day].foods=[];
+  S.extras[S.day].foods.push({mac,idx,units:1});
   save();renderExtras();renderMeals();
 }
 function addFueraText(txt){
@@ -1646,10 +1672,12 @@ function renderWeek(){
     const plan=PLANS[h.day];
     let macroPills='';
     if(h.nut){
+      const k=h.nut.k||1;
+      const pp=Math.round(h.nut.p*4/k*100),cp=Math.round(h.nut.c*4/k*100),gp=Math.round(h.nut.g*9/k*100);
       macroPills=`<div class="wc-macros">
-        <div class="wc-pill wc-P">🥩 ${Math.round(h.nut.p)}g</div>
-        <div class="wc-pill wc-C">🌾 ${Math.round(h.nut.c)}g</div>
-        <div class="wc-pill wc-G">🥑 ${Math.round(h.nut.g)}g</div>
+        <div class="wc-pill wc-P">🥩 ${Math.round(h.nut.p)}g<span class="wc-pct">${pp}%</span></div>
+        <div class="wc-pill wc-C">🌾 ${Math.round(h.nut.c)}g<span class="wc-pct">${cp}%</span></div>
+        <div class="wc-pill wc-G">🥑 ${Math.round(h.nut.g)}g<span class="wc-pct">${gp}%</span></div>
         <div class="wc-pill wc-K">🔥 ${Math.round(h.nut.k)} kcal</div>
       </div>`;
     }else{
@@ -1688,21 +1716,24 @@ function openModal(mi,mac,ci,cv){
   M.tmp=[...existing];
   const plan=PLANS[S.day];
   const meal=plan.meals[mi];
-  const effM=effectiveMealMacros(S.day,mi);
-  const maxPG=Math.min(effM.P||0,effM.G||0);
-  const pgC=pgConsumedFromChips(S.sel[S.day]?.[mi]||{},maxPG);
   if(mac==='PG'){
-    const pRem=Math.max(0,(effM.P||0)-pgC);
-    const gRem=Math.max(0,(effM.G||0)-pgC);
     document.getElementById('mTitle').textContent='🥩🥑 Proteína + Grasa';
-    document.getElementById('mSubtitle').textContent=`${fmt(cv)} ud · ${meal.name} ${meal.time} · disponibles P:${fmt(pRem)} G:${fmt(gRem)}`;
+    document.getElementById('mSubtitle').textContent=`${fmt(cv)} ud · ${meal.name} ${meal.time}`;
   }else{
     document.getElementById('mTitle').textContent=`${ME[mac]} ${ML[mac]}`;
     document.getElementById('mSubtitle').textContent=`${fmt(cv)} unidad${cv!==1?'es':''} · ${meal.name} ${meal.time}`;
   }
   document.getElementById('searchInput').value='';
-  // Set unit selector to current consumed value
   const sel=document.getElementById('chipUnitsSel');
+  sel.style.display='';
+  if(cv<0.95){
+    M.chipUnits=cv;
+    sel.disabled=true;
+    sel.title='Solo disponible esta porción en esta comida';
+  } else {
+    sel.disabled=false;
+    sel.title='';
+  }
   const opts=[1,0.5,0.333];
   sel.value=opts.reduce((best,o)=>Math.abs(o-M.chipUnits)<Math.abs(best-M.chipUnits)?o:best,1);
   renderFoodList('');
@@ -1711,15 +1742,38 @@ function openModal(mi,mac,ci,cv){
 }
 function closeModal(){document.getElementById('overlay').classList.remove('open')}
 
-function copyDay(src,dst){
-  if(!confirm(`¿Copiar los alimentos de "${PLANS[src].name}" a "${PLANS[dst].name}"?\nSe sobreescribirán los datos de ${PLANS[dst].name}.`))return;
-  if(!S.sel[src]||Object.keys(S.sel[src]).length===0){alert('El día origen no tiene alimentos seleccionados.');return;}
-  S.sel[dst]=JSON.parse(JSON.stringify(S.sel[src]));
-  // Macros son intocables (del PDF) — nunca copiar overrides de macros al día destino
-  if(!S.mealMacros)S.mealMacros={};
-  delete S.mealMacros[dst]; // Resetear overrides del destino para que use su propio plan
+function copyMeal(mi){
+  const srcMealData=S.sel[S.day]?.[mi];
+  if(!srcMealData||!Object.keys(srcMealData).length){
+    alert('Esta comida no tiene alimentos asignados.');return;
+  }
+  const meal=PLANS[S.day].meals[mi];
+  const otherDays=Object.entries(PLANS).filter(([k])=>k!==S.day);
+  const btns=otherDays.map(([k,p])=>
+    `<button class="meal-picker-btn" onclick="confirmCopyMeal(${mi},'${k}')">
+      <span>${p.icon} ${p.name}</span>
+    </button>`
+  ).join('');
+  const el=document.createElement('div');
+  el.className='meal-picker-overlay';
+  el.id='mealPickerOverlay';
+  el.innerHTML=`<div class="meal-picker-sheet">
+    <div class="meal-picker-title">Copiar "${meal.name}" a...</div>
+    ${btns}
+    <button class="meal-picker-cancel" onclick="closeMealPicker()">Cancelar</button>
+  </div>`;
+  el.addEventListener('click',e=>{if(e.target===el)closeMealPicker();});
+  document.body.appendChild(el);
+}
+function confirmCopyMeal(mi,dstDay){
+  closeMealPicker();
+  const meal=PLANS[S.day].meals[mi];
+  const dstMeal=PLANS[dstDay].meals[mi];
+  if(!confirm(`¿Copiar "${meal.name}" de ${PLANS[S.day].name} a ${PLANS[dstDay].name}?\nSe sobreescribirán los alimentos de esa comida (los macros del plan se respetan).`))return;
+  if(!S.sel[dstDay])S.sel[dstDay]={};
+  S.sel[dstDay][mi]=JSON.parse(JSON.stringify(S.sel[S.day][mi]));
   save();
-  alert(`✓ Copiado a ${PLANS[dst].name}. Ahora puedes seleccionar ese día para verlo.`);
+  alert(`✓ "${meal.name}" copiada a ${PLANS[dstDay].name}.`);
 }
 
 function clearDay(day){
@@ -1738,38 +1792,22 @@ function dayBoxClick(mac){
   // Build list of meals that have a free slot for this macro
   const options=plan.meals.map((meal,mi)=>{
     const ms=S.sel[S.day]?.[mi]||{};
-    const eff=effectiveMealMacros(S.day,mi);
     let freeSlot=null;
-    if(mac==='PG'){
-      const pT=eff.P||0,gT=eff.G||0;
-      const maxPG=Math.min(pT,gT);
-      if(pT>0&&gT>0){
-        for(let ci=0;ci<chipCount(maxPG);ci++){
-          if(!chipHasFood(ms,'PG',ci)){freeSlot={ci,cv:chipVal(maxPG,ci)};break;}
-        }
-      }
-    } else if(mac==='V'||mac==='F'){
-      // V and F can go in any meal — find next free extra slot
-      let nextCi=chipCount(eff[mac]||0);
-      while(ms.chips?.[mac]?.[nextCi]?.length)nextCi++;
-      freeSlot={ci:nextCi,cv:1};
-    } else {
-      const pT=eff.P||0,gT=eff.G||0;
-      const pgC=pgConsumedFromChips(ms,Math.min(pT,gT));
-      const pFr=Math.max(0,pT-pgC),gFr=Math.max(0,gT-pgC);
-      const effAmt=mac==='P'?pFr:(mac==='G'?gFr:(eff[mac]||0));
-      for(let ci=0;ci<chipCount(effAmt);ci++){
-        if(!chipHasFood(ms,mac,ci)){freeSlot={ci,cv:chipVal(effAmt,ci)};break;}
-      }
-    }
-    return{mi,meal,freeSlot};
+    let isEdit=false;
+    // Global pool: any chip can go to any meal, always full unit (1)
+    let nextCi=0;
+    while((ms.chips?.[mac]?.[nextCi]||[]).length)nextCi++;
+    freeSlot={ci:nextCi,cv:1};
+    return{mi,meal,freeSlot,isEdit};
   });
 
-  const btns=options.map(({mi,meal,freeSlot})=>{
+  const btns=options.map(({mi,meal,freeSlot,isEdit})=>{
     const hasFree=!!freeSlot;
+    const isFrac=freeSlot?.isFrac;
     return`<button class="meal-picker-btn${hasFree?'':' disabled'}" onclick="mealPickerSelect(${mi},'${mac}',${freeSlot?freeSlot.ci:-1},${freeSlot?freeSlot.cv:0})">
       <span class="mpb-time">${meal.time}</span>
       <span>${meal.name}</span>
+      ${isEdit?'<span style="margin-left:auto;font-size:10px;color:var(--accent)">✏️ editar</span>':''}
       ${!hasFree?'<span style="margin-left:auto;font-size:10px;color:#bbb">completo</span>':''}
     </button>`;
   }).join('');
@@ -1861,6 +1899,67 @@ function setChipUnits(v){
   document.getElementById('mSubtitle').textContent=
     `${fmt(M.chipUnits)} unidad${M.chipUnits!==1?'es':''} · ${document.getElementById('mSubtitle').textContent.split('·').slice(1).join('·')}`;
 }
+// ════════════════════════════════════════════════
+// FOOD ROW DRAG & DROP
+// ════════════════════════════════════════════════
+let FoodRowDragSrc=null;
+function foodRowDragStart(mi,mac,ci,pos,e){
+  FoodRowDragSrc={mi,mac,ci,pos};
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>e.currentTarget.classList.add('food-row-dragging'),0);
+}
+function foodRowDragEnd(e){
+  FoodRowDragSrc=null;
+  e.currentTarget.classList.remove('food-row-dragging');
+  document.querySelectorAll('.food-row-drop-before,.food-row-drop-after')
+    .forEach(el=>el.classList.remove('food-row-drop-before','food-row-drop-after'));
+}
+function foodRowDragOver(mi,mac,ci,pos,e){
+  if(!FoodRowDragSrc)return;
+  e.preventDefault();e.stopPropagation();
+  e.dataTransfer.dropEffect='move';
+  const before=e.clientY<e.currentTarget.getBoundingClientRect().top+e.currentTarget.offsetHeight/2;
+  e.currentTarget.classList.toggle('food-row-drop-before',before);
+  e.currentTarget.classList.toggle('food-row-drop-after',!before);
+}
+function foodRowDragLeave(e){
+  e.currentTarget.classList.remove('food-row-drop-before','food-row-drop-after');
+}
+function foodRowDrop(dstMi,dstMac,dstCi,dstPos,e){
+  e.preventDefault();e.stopPropagation();
+  e.currentTarget.classList.remove('food-row-drop-before','food-row-drop-after');
+  if(!FoodRowDragSrc)return;
+  const{mi:srcMi,mac:srcMac,ci:srcCi,pos:srcPos}=FoodRowDragSrc;
+  FoodRowDragSrc=null;
+  if(srcMac!==dstMac)return; // mac types must match
+  const srcFoods=S.sel[S.day]?.[srcMi]?.chips?.[srcMac]?.[srcCi];
+  if(!srcFoods||srcPos>=srcFoods.length)return;
+  const foodIdx=srcFoods[srcPos];
+  const before=e.clientY<e.currentTarget.getBoundingClientRect().top+e.currentTarget.offsetHeight/2;
+  if(srcMi===dstMi&&srcCi===dstCi){
+    // Same chip: reorder in place
+    srcFoods.splice(srcPos,1);
+    const adj=srcPos<dstPos?dstPos-1:dstPos;
+    srcFoods.splice(before?adj:adj+1,0,foodIdx);
+  } else {
+    // Different chip or meal: move food to its own new chip slot (never merge, avoids half-portions)
+    srcFoods.splice(srcPos,1);
+    if(!srcFoods.length){
+      delete S.sel[S.day][srcMi].chips[srcMac][srcCi];
+      if(S.sel[S.day][srcMi].chipUnits?.[srcMac])delete S.sel[S.day][srcMi].chipUnits[srcMac][srcCi];
+    }
+    if(!S.sel[S.day][dstMi])S.sel[S.day][dstMi]={};
+    const dms=S.sel[S.day][dstMi];
+    if(!dms.chips)dms.chips={};
+    if(!dms.chips[dstMac])dms.chips[dstMac]={};
+    // Always find next empty slot — never merge into occupied chip
+    let newCi=0;
+    while((dms.chips[dstMac][newCi]||[]).length)newCi++;
+    dms.chips[dstMac][newCi]=[foodIdx];
+  }
+  save();renderMeals();
+}
+
 function applySelection(){
   if(M.mi==='EXT'){
     if(!S.extras)S.extras={};
@@ -1880,10 +1979,12 @@ function applySelection(){
   // Save consumed unit value (may differ from planned chipVal)
   if(!S.sel[S.day][M.mi].chipUnits)S.sel[S.day][M.mi].chipUnits={};
   if(!S.sel[S.day][M.mi].chipUnits[M.mac])S.sel[S.day][M.mi].chipUnits[M.mac]={};
-  if(M.chipUnits!==M.chipVal){
+  // For fractional chips (½, ⅓), always treat as fully consumed — delete stored override
+  const isFractionalChip=M.chipVal<0.95;
+  if(!isFractionalChip&&M.chipUnits!==M.chipVal){
     S.sel[S.day][M.mi].chipUnits[M.mac][M.ci]=M.chipUnits;
   } else {
-    // User restored to full unit — clear any previous partial value
+    // Full chip at full units, or fractional chip (always auto-consumed) — clear any stale value
     delete S.sel[S.day][M.mi].chipUnits[M.mac][M.ci];
   }
   save();closeModal();renderMeals();
