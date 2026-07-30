@@ -250,6 +250,23 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 .save-day-btn:active{transform:scale(.98)}
 .save-ok{text-align:center;font-size:12px;color:var(--accent2);padding:6px;font-weight:600;display:none}
 
+/* ── PLANES TAB ── */
+.planes-section{padding:14px 16px 24px;display:flex;flex-direction:column;gap:16px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.plan-card-head{padding:11px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);background:var(--bg)}
+.plan-card-name{font-size:13px;font-weight:600;color:var(--text)}
+.plan-totals-pills{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.plan-2col{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.plan-col{display:flex;flex-direction:column}
+.plan-col:first-child{border-right:1px solid var(--border)}
+.pm-section{padding:8px 10px;border-bottom:1px solid var(--border2)}
+.pm-section:last-child{border-bottom:none}
+.pm-almuerzo-wrap .pm-section{border-bottom:none;border-top:1px solid var(--border)}
+.pm-header{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#FBF8F2;background:#1E1B18;padding:3px 8px;border-radius:4px;margin-bottom:5px;text-align:center}
+.pm-bar{font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:3px;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.pm-bar-icon{font-size:11px;flex-shrink:0}
+.pm-note{font-size:8px;color:var(--muted);text-align:center;margin-top:4px;line-height:1.35;font-style:italic}
+
 /* ── SEMANA / CALENDARIO ── */
 .week-section{padding:12px 16px 16px}
 .week-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
@@ -376,8 +393,9 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('hoy')">🍽️ Hoy</button>
-  <button class="tab-btn" onclick="switchTab('semana')">📊 Semana</button>
+  <button class="tab-btn active" onclick="switchTab('hoy')">Hoy</button>
+  <button class="tab-btn" onclick="switchTab('semana')">Semana</button>
+  <button class="tab-btn" onclick="switchTab('planes')">Planes</button>
 </div>
 
 <!-- ══ TAB HOY ══ -->
@@ -422,6 +440,10 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 <!-- ══ TAB SEMANA ══ -->
 <div id="tab-semana" class="tab-content">
   <div class="week-section" id="weekSection"></div>
+</div>
+
+<div id="tab-planes" class="tab-content">
+  <div class="planes-section" id="planesSection"></div>
 </div>
 
 <!-- ══ NUEVO DÍA MODAL ══ -->
@@ -947,11 +969,12 @@ let M={open:false,mi:null,mac:null,ci:0,chipVal:1,chipUnits:1,tmp:[]};
 // ════════════════════════════════════════════════
 function switchTab(t){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    b.classList.toggle('active',(['hoy','semana'][i])===t);
+    b.classList.toggle('active',(['hoy','semana','planes'][i])===t);
   });
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='semana') renderCalendar();
+  if(t==='planes') renderPlanes();
 }
 
 // ════════════════════════════════════════════════
@@ -1705,6 +1728,91 @@ function saveDay(){
 // WEEK VIEW
 // ════════════════════════════════════════════════
 function planColor(day){return({sup:'#B3606B',spi:'#C2A278',run:'#7F8A72'})[day]||'#B0A799';}
+
+// ════════════════════════════════════════════════
+// PLANES TAB
+// ════════════════════════════════════════════════
+function renderPlanes(){
+  const el=document.getElementById('planesSection');
+
+  // Exact data from PDFs
+  const VISUAL={
+    sup:{name:'Tren Superior',icon:'💪',color:'#B3606B',meals:[
+      {id:'desayuno',name:'Desayuno',note:'Primera ingesta del día',macros:{P:1,C:2,F:1,G:1}},
+      {id:'snackam',name:'Snack AM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
+      {id:'almuerzo',name:'Almuerzo',note:'2.5–5 hrs después',macros:{P:2,C:1,V:1}},
+      {id:'snackpm',name:'Snack PM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
+      {id:'cena',name:'Cena',note:'2.5–5 hrs después',macros:{P:1,C:1,G:3}},
+    ]},
+    spi:{name:'Spinning · TI',icon:'🚴‍♀️',color:'#C2A278',meals:[
+      {id:'desayuno',name:'Desayuno',note:'Primera ingesta del día',macros:{P:1,C:2,F:1,G:1}},
+      {id:'snackam',name:'Snack AM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
+      {id:'almuerzo',name:'Almuerzo',note:'2.5–5 hrs después',macros:{P:2,C:2,V:1,G:1}},
+      {id:'snackpm',name:'Snack PM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
+      {id:'cena',name:'Cena',note:'2.5–5 hrs después',macros:{P:1,C:1,G:3}},
+    ]},
+    run:{name:'Carrera · 10K',icon:'🏃‍♀️',color:'#7F8A72',meals:[
+      {id:'desayuno',name:'Desayuno',note:'Primera ingesta del día',macros:{P:1,C:2,F:1,G:1}},
+      {id:'snackam',name:'Snack AM',note:'2.5–5 hrs después',macros:{C:2,G:1}},
+      {id:'almuerzo',name:'Almuerzo',note:'2.5–5 hrs después',macros:{P:2,C:2,V:1,G:1}},
+      {id:'snackpm',name:'Snack PM',note:'2.5–5 hrs después',macros:{C:1,G:2}},
+      {id:'cena',name:'Cena',note:'2.5–5 hrs después',macros:{P:1,C:1,G:3}},
+    ]}
+  };
+
+  // Macro visual config — colors inspired by PDF
+  const MC={
+    P:{bg:'#7EC0D8',text:'#fff',label:'Proteínas',icon:'⊙'},
+    C:{bg:'#E8943A',text:'#fff',label:'Carbos',icon:'≋'},
+    F:{bg:'#B0A0CC',text:'#fff',label:'Frutas',icon:'✿'},
+    G:{bg:'#E8C840',text:'#3A3000',label:'Grasas',icon:'◎'},
+    V:{bg:'#5AAB78',text:'#fff',label:'Verduras',icon:'⊛'}
+  };
+
+  function bars(macros){
+    let h='';
+    Object.entries(macros).forEach(([mac,count])=>{
+      for(let i=0;i<count;i++){
+        const m=MC[mac];
+        h+=`<div class="pm-bar" style="background:${m.bg};color:${m.text}">${m.label}</div>`;
+      }
+    });
+    return h;
+  }
+
+  function section(meal){
+    return `<div class="pm-section">
+      <div class="pm-header">${meal.name}</div>
+      ${bars(meal.macros)}
+      <div class="pm-note">${meal.note}</div>
+    </div>`;
+  }
+
+  let html='';
+  Object.values(VISUAL).forEach(plan=>{
+    const [des,sam,alm,spm,cen]=plan.meals;
+    // Totals
+    const tot={P:0,C:0,F:0,G:0,V:0};
+    plan.meals.forEach(m=>Object.entries(m.macros).forEach(([k,v])=>{if(k in tot)tot[k]+=v;}));
+    const totPills=Object.entries(tot).filter(([,v])=>v>0)
+      .map(([mac,val])=>`<span style="background:${MC[mac].bg};color:${MC[mac].text};padding:1px 7px;border-radius:10px;font-size:9px;font-weight:700">${val} ${mac}</span>`).join('');
+
+    html+=`<div class="plan-card">
+      <div class="plan-card-head" style="border-left:4px solid ${plan.color}">
+        <span style="font-size:20px">${plan.icon}</span>
+        <span class="plan-card-name">${plan.name}</span>
+        <div class="plan-totals-pills">${totPills}</div>
+      </div>
+      <div class="plan-2col">
+        <div class="plan-col">${section(des)}${section(sam)}</div>
+        <div class="plan-col">${section(spm)}${section(cen)}</div>
+      </div>
+      <div class="pm-almuerzo-wrap">${section(alm)}</div>
+    </div>`;
+  });
+
+  el.innerHTML=html;
+}
 
 function calNav(dir){
   calMonth+=dir;
