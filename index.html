@@ -103,6 +103,20 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 .dt-meal-name{font-size:10px;font-weight:600;color:var(--muted);min-width:62px;flex-shrink:0}
 .dt-sep{border-top:1px solid var(--border);margin:6px 0}
 .dt-total-row{display:flex;align-items:center;gap:8px;padding:5px 0 0}
+/* ── MACRO TARGET BARS ── */
+.dt-targets{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.dt-target-row{display:grid;grid-template-columns:18px 1fr 80px;align-items:center;gap:7px}
+.dt-target-mac{font-size:10px;font-weight:700}
+.dt-target-bar-wrap{height:6px;background:var(--border2);border-radius:3px;overflow:hidden;position:relative}
+.dt-target-bar{height:100%;border-radius:3px;transition:width .4s ease;max-width:100%}
+.dt-target-bar.over{background:#B3606B!important}
+.dt-target-nums{font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;text-align:right}
+.dt-target-nums b{color:var(--text);font-size:10.5px}
+.dt-target-pct{font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:3px}
+.dt-kcal-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:7px;border-top:1px solid var(--border2)}
+.dt-kcal-label{font-size:10px;font-weight:600;color:var(--muted)}
+.dt-kcal-val{font-size:13px;font-weight:700;color:var(--text)}
+.dt-kcal-pct{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px}
 
 /* ── MEAL CARD ── */
 .meal-card{background:var(--card);border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
@@ -732,6 +746,7 @@ const FOODS = {
     {n:"Aceite de aguacate",q:4,u:"g",s:"A",m:[0,0,4,35]},
     {n:"Harina de cacahuete",q:45,u:"g",s:"A",m:[22,9,5,161],x:{mac:'C',units:0.5}},
     {n:"Yogur de coco Alpro",q:65,u:"g",s:"A",m:[1,7,3,55]},
+    {n:"Alpro Soja Coco",q:135,u:"g",s:"A",m:[5,10,4,90]},
     {n:"Aceite de ajonjolí",q:4,u:"g",s:"A",m:[0,0,4,35]},
     {n:"Aceite de coco",q:4,u:"g",s:"A",m:[0,0,4,35]},
     {n:"Aceite de oliva",q:4,u:"g",s:"A",m:[0,0,4,35]},
@@ -799,6 +814,15 @@ const FOODS = {
 };
 
 // ════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// MACRO TARGETS por tipo de día (según guía Vidafit)
+// ════════════════════════════════════════════════
+const TARGETS={
+  sup:{p:128,c:96, g:55,k:1400},
+  spi:{p:128,c:128,g:55,k:1550},
+  run:{p:128,c:152,g:55,k:1650}
+};
+
 // PLANES  (snacks AM/PM repartidos ½ a comida anterior, ½ a posterior)
 // ════════════════════════════════════════════════
 const PLANS={
@@ -1275,25 +1299,53 @@ function renderMeals(){
       <span class="dt-meal-name">➕ Extras</span>
       ${mealPills(extNut,true,dayNut)}
     </div>`:'';
-    // Total row with distribution %
-    const k=dayNut.k||1;
-    const totalRow=`<div class="dt-total-row">
-      <span class="dt-meal-name" style="color:var(--accent);font-size:11px">Total</span>
-      <div class="dt-row">
-        <div class="dt-pill P">🥩 <b>${Math.round(dayNut.p)}g</b>${dpct(Math.round(dayNut.p*4/k*100))}</div>
-        <div class="dt-pill C">🌾 <b>${Math.round(dayNut.c)}g</b>${dpct(Math.round(dayNut.c*4/k*100))}</div>
-        <div class="dt-pill G">🥑 <b>${Math.round(dayNut.g)}g</b>${dpct(Math.round(dayNut.g*9/k*100))}</div>
-        <div class="dt-pill K">🔥 <b>${Math.round(dayNut.k)} kcal</b></div>
+    // Macro target bars
+    const tg=TARGETS[S.day]||{p:128,c:96,g:55,k:1400};
+    const pP=Math.round(dayNut.p/tg.p*100);
+    const pC=Math.round(dayNut.c/tg.c*100);
+    const pG=Math.round(dayNut.g/tg.g*100);
+    const pK=Math.round(dayNut.k/tg.k*100);
+    function tbar(mac,val,target,pct,color){
+      const w=Math.min(pct,100);
+      const isOver=pct>100;
+      const pctStyle=isOver?'background:#FDEAEA;color:#B3606B':'background:var(--bg);color:var(--muted)';
+      return `<div class="dt-target-row">
+        <span class="dt-target-mac" style="color:${color}">${mac}</span>
+        <div class="dt-target-bar-wrap">
+          <div class="dt-target-bar${isOver?' over':''}" style="width:${w}%;background:${color}"></div>
+        </div>
+        <span class="dt-target-nums"><b>${Math.round(val)}g</b> / ${target}g <span class="dt-target-pct" style="${pctStyle}">${pct}%</span></span>
+      </div>`;
+    }
+    const kStyle=pK>100?'background:#FDEAEA;color:#B3606B':'background:var(--bg);color:var(--muted)';
+    const targetSection=`<div class="dt-targets">
+      ${tbar('P',dayNut.p,tg.p,pP,'#7EC0D8')}
+      ${tbar('C',dayNut.c,tg.c,pC,'#E8943A')}
+      ${tbar('G',dayNut.g,tg.g,pG,'#E8C840')}
+      <div class="dt-kcal-row">
+        <span class="dt-kcal-label">🔥 Calorías</span>
+        <span><span class="dt-kcal-val">${Math.round(dayNut.k)}</span><span style="color:var(--muted);font-size:11px"> / ${tg.k} kcal</span>
+        <span class="dt-kcal-pct" style="${kStyle}">${pK}%</span></span>
       </div>
     </div>`;
     dtEl.innerHTML=`<div class="dt-title">📊 Total del día</div>
     ${mealRows}${extRow}
     <div class="dt-sep"></div>
-    ${totalRow}
-    ${progressBar}`;
+    ${targetSection}`;
     dtEl.style.display='block';
   } else {
-    dtEl.innerHTML=`<div class="dt-title" style="margin:0">📊 Selecciona alimentos para ver los totales del día</div>${progressBar}`;
+    // Show targets even with no foods selected
+    const tg=TARGETS[S.day]||{p:128,c:96,g:55,k:1400};
+    const emptyBars=`<div class="dt-targets">
+      ${['P','C','G'].map((mac,i)=>{const t=[tg.p,tg.c,tg.g][i];const col=['#7EC0D8','#E8943A','#E8C840'][i];
+        return `<div class="dt-target-row"><span class="dt-target-mac" style="color:${col}">${mac}</span>
+        <div class="dt-target-bar-wrap"><div class="dt-target-bar" style="width:0%;background:${col}"></div></div>
+        <span class="dt-target-nums"><b>0g</b> / ${t}g <span class="dt-target-pct" style="background:var(--bg);color:var(--muted)">0%</span></span></div>`;}).join('')}
+      <div class="dt-kcal-row"><span class="dt-kcal-label">🔥 Calorías</span>
+      <span><span class="dt-kcal-val">0</span><span style="color:var(--muted);font-size:11px"> / ${tg.k} kcal</span>
+      <span class="dt-kcal-pct" style="background:var(--bg);color:var(--muted)">0%</span></span></div>
+    </div>`;
+    dtEl.innerHTML=`<div class="dt-title" style="margin-bottom:10px">📊 Objetivos del día</div>${emptyBars}`;
     dtEl.style.display='block';
   }
 
