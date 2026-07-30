@@ -828,21 +828,27 @@ const TARGETS={
 const PLANS={
   sup:{name:"Descanso / Tren Superior",icon:"💪",desc:"Día de descanso o entrenamiento de tren superior",
     meals:[
-      {time:"9:00",name:"Desayuno",macros:{P:1,C:2.5,F:1,G:2}},
-      {time:"14:00",name:"Comida",macros:{P:2,C:2,V:1,G:2}},
-      {time:"19:00",name:"Cena",macros:{P:1,C:1.5,G:6}}
+      {time:"9:00", name:"Desayuno",  macros:{P:1,C:2,F:1,G:1}},
+      {time:"11:30",name:"Snack AM",  macros:{C:1,G:1}},
+      {time:"14:00",name:"Almuerzo",  macros:{P:2,C:1,V:1}},
+      {time:"17:00",name:"Snack PM",  macros:{C:1,G:1}},
+      {time:"20:00",name:"Cena",      macros:{P:1,C:1,G:3}}
     ]},
   spi:{name:"Spinning",icon:"🚴‍♀️",desc:"Día de spinning o entrenamiento de tren inferior",
     meals:[
-      {time:"9:00",name:"Desayuno",macros:{P:1,C:2.5,F:1,G:2}},
-      {time:"14:00",name:"Comida",macros:{P:2,C:4,V:1,G:3}},
-      {time:"19:00",name:"Cena",macros:{P:1,C:1.5,G:5}}
+      {time:"9:00", name:"Desayuno",  macros:{P:1,C:2,F:1,G:1}},
+      {time:"11:30",name:"Snack AM",  macros:{C:1,G:1}},
+      {time:"14:00",name:"Almuerzo",  macros:{P:2,C:2,V:1}},
+      {time:"17:00",name:"Snack PM",  macros:{C:1,G:1}},
+      {time:"20:00",name:"Cena",      macros:{P:1,C:1,G:3}}
     ]},
   run:{name:"Carrera / Doble Entreno",icon:"🏃‍♀️",desc:"Carrera larga o doble entrenamiento",
     meals:[
-      {time:"9:00",name:"Desayuno",macros:{P:1,C:3,F:1,G:2}},
-      {time:"14:00",name:"Comida",macros:{P:2,C:5.5,V:1,G:3}},
-      {time:"19:00",name:"Cena",macros:{P:1,C:1.5,G:5}}
+      {time:"9:00", name:"Desayuno",  macros:{P:1,C:2,F:1,G:1}},
+      {time:"11:30",name:"Snack AM",  macros:{C:2,G:1}},
+      {time:"14:00",name:"Almuerzo",  macros:{P:2,C:2,V:1,G:1}},
+      {time:"17:00",name:"Snack PM",  macros:{C:1,G:2}},
+      {time:"20:00",name:"Cena",      macros:{P:1,C:1,G:3}}
     ]}
 };
 
@@ -1799,7 +1805,7 @@ function renderPlanes(){
     spi:{name:'Spinning · TI',icon:'🚴‍♀️',color:'#C2A278',meals:[
       {id:'desayuno',name:'Desayuno',note:'Primera ingesta del día',macros:{P:1,C:2,F:1,G:1}},
       {id:'snackam',name:'Snack AM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
-      {id:'almuerzo',name:'Almuerzo',note:'2.5–5 hrs después',macros:{P:2,C:2,V:1,G:1}},
+      {id:'almuerzo',name:'Almuerzo',note:'2.5–5 hrs después',macros:{P:2,C:2,V:1}},
       {id:'snackpm',name:'Snack PM',note:'2.5–5 hrs después',macros:{C:1,G:1}},
       {id:'cena',name:'Cena',note:'2.5–5 hrs después',macros:{P:1,C:1,G:3}},
     ]},
