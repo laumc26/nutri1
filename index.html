@@ -371,6 +371,15 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 .dmb-chips .uc-group{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .dmb-chips .uc-group+.uc-group::before{content:'·';color:#D0CCC8;font-size:18px;margin:0 2px}
 
+/* ── EDIT HISTORY BANNER ── */
+.edit-banner{display:flex;align-items:center;justify-content:space-between;background:#FEF9EC;border:1px solid #E8D080;border-radius:var(--radius);padding:10px 14px;margin:0 16px 10px;font-size:13px;color:#7A5A10;gap:10px}
+.edit-banner span{flex:1;min-width:0}
+.edit-banner .eb-btns{display:flex;gap:6px;flex-shrink:0}
+.edit-banner .eb-cancel{background:var(--border);color:var(--text);border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.edit-banner .eb-save{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.cal-del-btn{position:absolute;top:3px;left:3px;width:13px;height:13px;border-radius:50%;background:rgba(179,96,107,.18);border:none;cursor:pointer;font-size:8px;color:#B3606B;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;z-index:2}
+.cal-del-btn:hover{background:#B3606B;color:#fff}
+
 /* ── MEALS GRID ── */
 .meals-grid{display:flex;flex-direction:column;gap:12px}
 .meals-grid .meal-card{flex:none;width:100%;margin-bottom:0}
@@ -445,7 +454,14 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
         <button class="fuera-clear" onclick="clearFuera()">🗑 Borrar</button>
       </div>
     </div>
-    <button class="save-day-btn" onclick="saveDay()">💾 Guardar este día</button>
+    <div class="edit-banner" id="editBanner" style="display:none">
+      <span id="editBannerMsg"></span>
+      <div class="eb-btns">
+        <button class="eb-cancel" onclick="cancelEditHistory()">Cancelar</button>
+        <button class="eb-save" onclick="saveDay()">💾 Guardar</button>
+      </div>
+    </div>
+    <button class="save-day-btn" id="saveDayBtn" onclick="saveDay()">💾 Guardar este día</button>
     <div class="save-ok" id="saveOk">✅ Día guardado correctamente</div>
     <div style="height:12px"></div>
   </div>
@@ -834,7 +850,7 @@ const PLANS={
       {time:"17:00",name:"Snack PM",  macros:{C:1,G:1}},
       {time:"20:00",name:"Cena",      macros:{P:1,C:1,G:3}}
     ]},
-  spi:{name:"Spinning",icon:"🚴‍♀️",desc:"Día de spinning o entrenamiento de tren inferior",
+  spi:{name:"Spinning / Tren Inferior",icon:"🚴‍♀️",desc:"Día de spinning o entrenamiento de tren inferior",
     meals:[
       {time:"9:00", name:"Desayuno",  macros:{P:1,C:2,F:1,G:1}},
       {time:"11:30",name:"Snack AM",  macros:{C:1,G:1}},
@@ -862,6 +878,17 @@ const SUB_L={A:"★★★ Mejor elección",B:"★★ Buena elección",C:"★ Oca
 const REM=500; // ci offset for remainder chips (auto-generated for partial selections)
 let S={day:null,sel:{},fuera:'',history:[]};
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+function initCalMonth(){
+  // If current month has no history entries, jump to the most recent month that does
+  const mm=String(calMonth+1).padStart(2,'0');
+  const prefix=`${calYear}-${mm}`;
+  const hasCurrentMonth=(S.history||[]).some(h=>h.date&&h.date.startsWith(prefix));
+  if(!hasCurrentMonth&&S.history?.length){
+    const latest=S.history.reduce((a,b)=>a.date>b.date?a:b);
+    const [y,m]=latest.date.split('-');
+    calYear=parseInt(y);calMonth=parseInt(m)-1;
+  }
+}
 function save(){try{localStorage.setItem('nut_v3',JSON.stringify(S));}catch(e){}}
 
 // ── Drag & Drop chips ──
@@ -962,6 +989,36 @@ function mealDrop(mi,e){
 }
 function load(){try{const d=localStorage.getItem('nut_v3');if(d){S=JSON.parse(d);}}catch(e){}}
 load();
+
+// ── Schema migration: 3-meal → 5-meal (schemaV < 2) ──────────────────────
+(function migrateSchema(){
+  if((S.schemaV||0)>=2)return;
+  // Old: 0=Desayuno, 1=Comida, 2=Cena → New: 0=Desayuno, 2=Almuerzo, 4=Cena
+  function remap(sel){
+    if(!sel)return sel;
+    const out={};
+    Object.entries(sel).forEach(([mi,v])=>{
+      const i=parseInt(mi);
+      out[i===1?2:i===2?4:i]=v;
+    });
+    return out;
+  }
+  function needsRemap(sel){
+    if(!sel)return false;
+    const keys=Object.keys(sel).map(Number);
+    return keys.includes(1)&&!keys.includes(2)&&!keys.includes(4);
+  }
+  let changed=false;
+  Object.keys(S.sel||{}).forEach(day=>{
+    if(needsRemap(S.sel[day])){S.sel[day]=remap(S.sel[day]);changed=true;}
+  });
+  (S.history||[]).forEach((h,i)=>{
+    if(needsRemap(h.sel)){S.history[i].sel=remap(h.sel);changed=true;}
+  });
+  S.schemaV=2;
+  save(); // always persist schemaV
+})();
+
 // Migrate: clear any stale chipUnits stored for fractional chip slots
 (function migrateChipUnits(){
   let changed=false;
@@ -1003,7 +1060,7 @@ function switchTab(t){
   });
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
-  if(t==='semana') renderCalendar();
+  if(t==='semana'){initCalMonth();renderCalendar();}
   if(t==='planes') renderPlanes();
 }
 
@@ -1037,6 +1094,7 @@ function initApp(){
     document.getElementById('mealsSection').style.display='block';
     document.getElementById('fueraText').value=S.fuera||'';
     renderExtras();
+    renderEditBanner();
     renderMeals();
   }
 }
@@ -1077,6 +1135,7 @@ function renderDayCards(){
 }
 
 function selectDay(k){
+  if(S.editMode){S.editMode=null;renderEditBanner();}
   S.day=k;if(!S.sel[k])S.sel[k]={};
   save();renderDayCards();
   document.getElementById('mealsSection').style.display='block';
@@ -1764,8 +1823,26 @@ function clearFuera(){
 function saveDay(){
   if(!S.day)return;
   const dayNut=calcDayNut();
+  const ok=document.getElementById('saveOk');
+  if(S.editMode){
+    // Update existing history entry
+    const idx=S.editMode.histIdx;
+    if(S.history[idx]){
+      S.history[idx]=Object.assign({},S.history[idx],{
+        sel:JSON.parse(JSON.stringify(S.sel[S.day]||{})),
+        fuera:S.fuera||'',
+        nut:dayNut
+      });
+    }
+    S.editMode=null;
+    save();
+    renderEditBanner();
+    ok.textContent='✅ Día anterior actualizado';
+    ok.style.display='block';
+    setTimeout(()=>{ok.style.display='none';ok.textContent='✅ Día guardado correctamente';},2500);
+    return;
+  }
   const today=new Date().toISOString().slice(0,10);
-  // Remove existing entry for today if any
   S.history=S.history.filter(h=>h.date!==today);
   S.history.unshift({
     date:today,
@@ -1774,12 +1851,57 @@ function saveDay(){
     fuera:S.fuera||'',
     nut:dayNut
   });
-  // Keep last 30 days
   if(S.history.length>30)S.history=S.history.slice(0,30);
   save();
-  const ok=document.getElementById('saveOk');
   ok.style.display='block';
   setTimeout(()=>ok.style.display='none',2500);
+}
+
+function editHistoryDay(idx){
+  const h=S.history[idx];if(!h)return;
+  if(S.editMode?.histIdx===idx){switchTab('hoy');return;}
+  // Cancel any current edit silently
+  if(S.editMode) S.editMode=null;
+  S.editMode={histIdx:idx,date:h.date,day:h.day};
+  S.day=h.day;
+  S.sel[h.day]=JSON.parse(JSON.stringify(h.sel||{}));
+  S.fuera=h.fuera||'';
+  save();
+  switchTab('hoy');
+  renderDayCards();
+  document.getElementById('fueraText').value=S.fuera;
+  renderExtras();
+  renderEditBanner();
+  renderMeals();
+  document.getElementById('mealsSection').style.display='block';
+  document.getElementById('mealsSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function cancelEditHistory(){
+  if(!S.editMode)return;
+  const h=S.history[S.editMode.histIdx];
+  if(h) S.sel[S.editMode.day]=JSON.parse(JSON.stringify(h.sel||{}));
+  S.fuera=S.editMode?h?.fuera||'':'';
+  S.editMode=null;
+  save();
+  renderEditBanner();
+  document.getElementById('fueraText').value=S.fuera||'';
+  renderMeals();
+}
+
+function renderEditBanner(){
+  const el=document.getElementById('editBanner');
+  const btn=document.getElementById('saveDayBtn');
+  if(!el)return;
+  if(S.editMode){
+    el.style.display='flex';
+    document.getElementById('editBannerMsg').innerHTML=
+      `✏️ Editando <b>${fmtDate(S.editMode.date)}</b> · ${PLANS[S.editMode.day]?.name||''}`;
+    if(btn)btn.style.display='none';
+  } else {
+    el.style.display='none';
+    if(btn)btn.style.display='block';
+  }
 }
 
 // ════════════════════════════════════════════════
@@ -1935,7 +2057,8 @@ function renderCalendar(){
       if(entry){
         const col=planColor(entry.day);
         const hasNut=entry.nut;
-        html+=`<div class="cal-cell${cls} cal-has-data" style="cursor:pointer;border-top-color:${col}" onclick="delHistoryPrompt(${entry.idx})" title="${PLANS[entry.day]?.name||''}">
+        html+=`<div class="cal-cell${cls} cal-has-data" style="cursor:pointer;border-top-color:${col}" onclick="editHistoryDay(${entry.idx})" title="Editar ${fmtDate(dateStr)}">
+          <button class="cal-del-btn" onclick="event.stopPropagation();delHistoryPrompt(${entry.idx})" title="Eliminar">×</button>
           <div class="cal-plan-dot" style="background:${col}"></div>
           <div class="cal-date-num">${d}</div>
           ${hasNut?`<div class="cal-day-macros">
