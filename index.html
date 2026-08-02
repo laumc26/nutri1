@@ -371,6 +371,18 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 .dmb-chips .uc-group{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .dmb-chips .uc-group+.uc-group::before{content:'·';color:#D0CCC8;font-size:18px;margin:0 2px}
 
+/* ── TRAINING LOG ── */
+.training-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin:0 16px 12px;box-shadow:var(--shadow)}
+.training-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.training-group{margin-bottom:8px}
+.training-group-label{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:5px}
+.training-chips{display:flex;flex-wrap:wrap;gap:6px}
+.tr-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;user-select:none}
+.tr-chip:hover{border-color:var(--accent2)}
+.tr-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.tr-chip.cardio.active{background:#7F8A72;border-color:#7F8A72;color:#fff}
+.tr-chip.fuerza.active{background:#B3606B;border-color:#B3606B;color:#fff}
+
 /* ── EDIT HISTORY BANNER ── */
 .edit-banner{display:flex;align-items:center;justify-content:space-between;background:#FEF9EC;border:1px solid #E8D080;border-radius:var(--radius);padding:10px 14px;margin:0 16px 10px;font-size:13px;color:#7A5A10;gap:10px}
 .edit-banner span{flex:1;min-width:0}
@@ -430,6 +442,10 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
   <div id="mealsSection" style="display:none">
     <div class="plan-units-bar" id="planUnitsBar" style="display:none"></div>
     <div class="daily-totals" id="dailyTotals"></div>
+    <div class="training-card" id="trainingCard" style="display:none">
+      <div class="training-title">🏋️ Registro de entreno</div>
+      <div id="trainingBody"></div>
+    </div>
     <div class="meals-wrap" id="mealsWrap"></div>
     <div class="fuera-card">
       <div class="fuera-header">
@@ -1095,6 +1111,7 @@ function initApp(){
     document.getElementById('fueraText').value=S.fuera||'';
     renderExtras();
     renderEditBanner();
+    renderTraining();
     renderMeals();
   }
 }
@@ -1141,6 +1158,7 @@ function selectDay(k){
   document.getElementById('mealsSection').style.display='block';
   document.getElementById('fueraText').value=S.fuera||'';
   renderExtras();
+  renderTraining();
   renderMeals();
   document.getElementById('mealsSection').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1872,6 +1890,7 @@ function editHistoryDay(idx){
   document.getElementById('fueraText').value=S.fuera;
   renderExtras();
   renderEditBanner();
+  renderTraining();
   renderMeals();
   document.getElementById('mealsSection').style.display='block';
   document.getElementById('mealsSection').scrollIntoView({behavior:'smooth',block:'start'});
@@ -1887,6 +1906,63 @@ function cancelEditHistory(){
   renderEditBanner();
   document.getElementById('fueraText').value=S.fuera||'';
   renderMeals();
+}
+
+// ════════════════════════════════════════════════
+// TRAINING LOG
+// ════════════════════════════════════════════════
+const TRAINING_OPTS={
+  cardio:[
+    {k:'c30',icon:'🏃',label:'Carrera 30\''},
+    {k:'c45',icon:'🏃',label:'Carrera 45\''},
+    {k:'c60',icon:'🏃',label:'Carrera 60\''},
+    {k:'spi',icon:'🚴',label:'Spinning'},
+  ],
+  fuerza:[
+    {k:'pt', icon:'💪',label:'Pecho + Tríceps'},
+    {k:'eb', icon:'💪',label:'Espalda + Bíceps'},
+    {k:'hom',icon:'💪',label:'Hombros'},
+    {k:'ti', icon:'🦵',label:'Tren Inferior'},
+  ]
+};
+
+function toggleTraining(key){
+  if(!S.day)return;
+  if(!S.training)S.training={};
+  if(!S.training[S.day])S.training[S.day]=[];
+  const arr=S.training[S.day];
+  const i=arr.indexOf(key);
+  if(i>=0)arr.splice(i,1); else arr.push(key);
+  save();renderTraining();
+}
+
+function renderTraining(){
+  const card=document.getElementById('trainingCard');
+  if(!S.day){card.style.display='none';return;}
+  card.style.display='block';
+  const active=new Set((S.training?.[S.day])||[]);
+  const body=document.getElementById('trainingBody');
+  let html='';
+  // Cardio group — always show on run, optionally on others
+  if(S.day==='run'||active.size>0||true){
+    html+=`<div class="training-group">
+      <div class="training-group-label">Cardio</div>
+      <div class="training-chips">
+        ${TRAINING_OPTS.cardio.map(o=>`<span class="tr-chip cardio${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
+      </div>
+    </div>`;
+  }
+  html+=`<div class="training-group">
+    <div class="training-group-label">Fuerza</div>
+    <div class="training-chips">
+      ${TRAINING_OPTS.fuerza.map(o=>`<span class="tr-chip fuerza${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
+    </div>
+  </div>`;
+  if(active.size){
+    const labels=[...TRAINING_OPTS.cardio,...TRAINING_OPTS.fuerza].filter(o=>active.has(o.k)).map(o=>o.label);
+    html+=`<div style="margin-top:8px;font-size:11px;color:var(--muted)">📌 ${labels.join(' · ')}</div>`;
+  }
+  body.innerHTML=html;
 }
 
 function renderEditBanner(){
