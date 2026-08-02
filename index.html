@@ -1938,24 +1938,42 @@ function renderTraining(){
   const active=new Set((S.training?.[S.day])||[]);
   const body=document.getElementById('trainingBody');
   let html='';
-  // Cardio group — always show on run, optionally on others
-  if(S.day==='run'||active.size>0||true){
+
+  // Filter options by day type
+  let cardioOpts=[], fuerzaOpts=[];
+  if(S.day==='sup'){
+    // Tren Superior: solo opciones de fuerza superior (sin TI), sin cardio
+    fuerzaOpts=TRAINING_OPTS.fuerza.filter(o=>o.k!=='ti');
+  } else if(S.day==='spi'){
+    // Spinning / Tren Inferior: solo Spinning + Tren Inferior
+    cardioOpts=TRAINING_OPTS.cardio.filter(o=>o.k==='spi');
+    fuerzaOpts=TRAINING_OPTS.fuerza.filter(o=>o.k==='ti');
+  } else {
+    // Doble entreno: todas las opciones
+    cardioOpts=TRAINING_OPTS.cardio;
+    fuerzaOpts=TRAINING_OPTS.fuerza;
+  }
+
+  if(cardioOpts.length){
     html+=`<div class="training-group">
       <div class="training-group-label">Cardio</div>
       <div class="training-chips">
-        ${TRAINING_OPTS.cardio.map(o=>`<span class="tr-chip cardio${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
+        ${cardioOpts.map(o=>`<span class="tr-chip cardio${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
       </div>
     </div>`;
   }
-  html+=`<div class="training-group">
-    <div class="training-group-label">Fuerza</div>
-    <div class="training-chips">
-      ${TRAINING_OPTS.fuerza.map(o=>`<span class="tr-chip fuerza${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
-    </div>
-  </div>`;
+  if(fuerzaOpts.length){
+    html+=`<div class="training-group">
+      <div class="training-group-label">Fuerza</div>
+      <div class="training-chips">
+        ${fuerzaOpts.map(o=>`<span class="tr-chip fuerza${active.has(o.k)?' active':''}" onclick="toggleTraining('${o.k}')">${o.icon} ${o.label}</span>`).join('')}
+      </div>
+    </div>`;
+  }
   if(active.size){
-    const labels=[...TRAINING_OPTS.cardio,...TRAINING_OPTS.fuerza].filter(o=>active.has(o.k)).map(o=>o.label);
-    html+=`<div style="margin-top:8px;font-size:11px;color:var(--muted)">📌 ${labels.join(' · ')}</div>`;
+    const allOpts=[...TRAINING_OPTS.cardio,...TRAINING_OPTS.fuerza];
+    const labels=allOpts.filter(o=>active.has(o.k)).map(o=>o.label);
+    if(labels.length) html+=`<div style="margin-top:8px;font-size:11px;color:var(--muted)">📌 ${labels.join(' · ')}</div>`;
   }
   body.innerHTML=html;
 }
