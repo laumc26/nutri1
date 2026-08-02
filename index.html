@@ -1390,7 +1390,7 @@ function renderMeals(){
     const pC=Math.round(dayNut.c/tg.c*100);
     const pG=Math.round(dayNut.g/tg.g*100);
     const pK=Math.round(dayNut.k/tg.k*100);
-    function tbar(mac,val,target,pct,color){
+    const tbar=(mac,val,target,pct,color)=>{
       const w=Math.min(pct,100);
       const isOver=pct>100;
       const pctStyle=isOver?'background:#FDEAEA;color:#B3606B':'background:var(--bg);color:var(--muted)';
@@ -1401,7 +1401,7 @@ function renderMeals(){
         </div>
         <span class="dt-target-nums"><b>${Math.round(val)}g</b> / ${target}g <span class="dt-target-pct" style="${pctStyle}">${pct}%</span></span>
       </div>`;
-    }
+    };
     const kStyle=pK>100?'background:#FDEAEA;color:#B3606B':'background:var(--bg);color:var(--muted)';
     const targetSection=`<div class="dt-targets">
       ${tbar('P',dayNut.p,tg.p,pP,'#7EC0D8')}
