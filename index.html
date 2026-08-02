@@ -142,6 +142,7 @@ body{background:var(--bg);font-family:'Instrument Sans',system-ui,-apple-system,
 .ucb.ucb-partial{border-style:dashed!important;opacity:.55!important}
 .ucb.ucb-daypartial{background-image:linear-gradient(to bottom right,transparent calc(50% - 2px),rgba(0,0,0,.5) calc(50% - 2px),rgba(0,0,0,.5) calc(50% + 2px),transparent calc(50% + 2px))!important}
 .ucb[draggable="true"]{cursor:grab}
+@media(hover:none) and (pointer:coarse){.sfr-drag-handle{display:none}}
 .ucb.ucb-drag-over{outline:2px solid var(--accent)!important;transform:scale(1.12);z-index:10;position:relative}
 .meal-card.meal-drag-over{outline:2px dashed var(--accent2);background:#F5EEE5}
 .uc-badge{font-size:9.5px;font-weight:600;color:var(--muted);margin-left:1px;white-space:nowrap}
@@ -892,6 +893,7 @@ const SUB_L={A:"★★★ Mejor elección",B:"★★ Buena elección",C:"★ Oca
 // STATE
 // ════════════════════════════════════════════════
 const REM=500; // ci offset for remainder chips (auto-generated for partial selections)
+const IS_TOUCH=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
 let S={day:null,sel:{},fuera:'',history:[]};
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 function initCalMonth(){
@@ -1566,7 +1568,8 @@ function renderMealCard(meal,mi,mSel,dayNut){
     const dispLabel=cv<0.95?(cv>=0.45?`${visLbl}½`:`${visLbl}⅓`):visLbl;
     const fracCls=(!isDone&&cv<0.95)?(cv>=0.45?' ucb-half':' ucb-third'):'';
     const stateCls=hasFd?(isDone?' ucb-done':' ucb-partial'):'';
-    return `<button class="ucb ucb-${visMac}${fracCls}${stateCls}" draggable="true" ondragstart="chipDragStart(${clickMi},'${mac}',${ci},${cv},event)" ondragover="chipDragOver(${clickMi},'${mac}',${ci},event)" ondragleave="chipDragLeave(event)" ondrop="chipDrop(${clickMi},'${mac}',${ci},event)" onclick="openModal(${clickMi},'${mac}',${ci},${cv})">${dispLabel}</button>`;
+    const dragAttrs=IS_TOUCH?'':` draggable="true" ondragstart="chipDragStart(${clickMi},'${mac}',${ci},${cv},event)" ondragover="chipDragOver(${clickMi},'${mac}',${ci},event)" ondragleave="chipDragLeave(event)" ondrop="chipDrop(${clickMi},'${mac}',${ci},event)"`;
+    return `<button class="ucb ucb-${visMac}${fracCls}${stateCls}"${dragAttrs} onclick="openModal(${clickMi},'${mac}',${ci},${cv})">${dispLabel}</button>`;
   };
 
   let chips='';
@@ -1623,13 +1626,9 @@ function renderMealCard(meal,mi,mSel,dayNut){
           const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
           nutStr=`<div class="sfr-macros-mini">🥩🥑 P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
         }
-        allFoodRows.push(`<div class="sel-food-row sfr-PG" draggable="true"
-          ondragstart="foodRowDragStart(${mi},'PG',${ci},${pos},event)"
-          ondragend="foodRowDragEnd(event)"
-          ondragover="foodRowDragOver(${mi},'PG',${ci},${pos},event)"
-          ondragleave="foodRowDragLeave(event)"
-          ondrop="foodRowDrop(${mi},'PG',${ci},${pos},event)">
-          <span class="sfr-drag-handle">⠿</span>
+        const drPGa=IS_TOUCH?'':`draggable="true" ondragstart="foodRowDragStart(${mi},'PG',${ci},${pos},event)" ondragend="foodRowDragEnd(event)" ondragover="foodRowDragOver(${mi},'PG',${ci},${pos},event)" ondragleave="foodRowDragLeave(event)" ondrop="foodRowDrop(${mi},'PG',${ci},${pos},event)"`;
+        allFoodRows.push(`<div class="sel-food-row sfr-PG" ${drPGa}>
+          ${IS_TOUCH?'':'<span class="sfr-drag-handle">⠿</span>'}
           <div class="sfr-left"><div class="sfr-name">🥩🥑 ${f.n}</div>${nutStr}</div>
           ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty qPG">${qStr}</div>`}
           <button class="sfr-remove" onclick="removeFood(${mi},'PG',${ci},${idx})" title="Quitar">×</button>
@@ -1657,13 +1656,9 @@ function renderMealCard(meal,mi,mSel,dayNut){
           const fp=Math.round(f.m[0]*share),fc=Math.round(f.m[1]*share),fg=Math.round(f.m[2]*share),fk=Math.round(f.m[3]*share);
           nutStr=`<div class="sfr-macros-mini">P:${fp}g · CH:${fc}g · G:${fg}g · ${fk}kcal</div>`;
         }
-        allFoodRows.push(`<div class="sel-food-row sfr-${dispMac}" draggable="true"
-          ondragstart="foodRowDragStart(${mi},'${mac}',${ci},${pos},event)"
-          ondragend="foodRowDragEnd(event)"
-          ondragover="foodRowDragOver(${mi},'${mac}',${ci},${pos},event)"
-          ondragleave="foodRowDragLeave(event)"
-          ondrop="foodRowDrop(${mi},'${mac}',${ci},${pos},event)">
-          <span class="sfr-drag-handle">⠿</span>
+        const drMac=IS_TOUCH?'':`draggable="true" ondragstart="foodRowDragStart(${mi},'${mac}',${ci},${pos},event)" ondragend="foodRowDragEnd(event)" ondragover="foodRowDragOver(${mi},'${mac}',${ci},${pos},event)" ondragleave="foodRowDragLeave(event)" ondrop="foodRowDrop(${mi},'${mac}',${ci},${pos},event)"`;
+        allFoodRows.push(`<div class="sel-food-row sfr-${dispMac}" ${drMac}>
+          ${IS_TOUCH?'':'<span class="sfr-drag-handle">⠿</span>'}
           <div class="sfr-left"><div class="sfr-name">${ME[dispMac]} ${f.n}${xBadge(f)}</div>${nutStr}</div>
           ${f.q===null?`<div class="sfr-ask">Consultar</div>`:`<div class="sfr-qty q${dispMac}">${qStr}</div>`}
           <button class="sfr-remove" onclick="removeFood(${mi},'${mac}',${ci},${idx})" title="Quitar">×</button>
