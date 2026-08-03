@@ -1149,8 +1149,6 @@ function resetCurrentDay(){
   renderMeals();
 }
 
-initApp();
-
 function renderDayCards(){
   document.getElementById('dayGrid').innerHTML=Object.entries(PLANS).map(([k,p])=>
     `<div class="day-card ${S.day===k?'active':''}" onclick="selectDay('${k}')">
@@ -2500,6 +2498,8 @@ function applySelection(){
   }
   save();closeModal();renderMeals();
 }
+
+initApp();
 </script>
 <script>
 if('serviceWorker' in navigator){
