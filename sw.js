@@ -1,4 +1,4 @@
-const CACHE = 'nut-v1';
+const CACHE = 'nut-v2';
 const ASSETS = [
   './',
   './index.html',
